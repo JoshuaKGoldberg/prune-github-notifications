@@ -1,4 +1,4 @@
-<h1 align="center">github-notifications-prune</h1>
+<h1 align="center">prune-github-notifications</h1>
 
 <p align="center">Prunes GitHub notifications you don't care about, such as automated dependency bumps. 🧹</p>
 
@@ -8,15 +8,77 @@
 	<a href="#contributors" target="_blank"><img alt="👪 All Contributors: 1" src="https://img.shields.io/badge/%F0%9F%91%AA_all_contributors-1-21bb42.svg" /></a>
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 	<!-- prettier-ignore-end -->
-	<a href="https://github.com/JoshuaKGoldberg/github-notifications-prune/blob/main/.github/CODE_OF_CONDUCT.md" target="_blank"><img alt="🤝 Code of Conduct: Kept" src="https://img.shields.io/badge/%F0%9F%A4%9D_code_of_conduct-kept-21bb42" /></a>
-	<a href="https://codecov.io/gh/JoshuaKGoldberg/github-notifications-prune" target="_blank"><img alt="🧪 Coverage" src="https://img.shields.io/codecov/c/github/JoshuaKGoldberg/github-notifications-prune?label=%F0%9F%A7%AA%20coverage" /></a>
-	<a href="https://github.com/JoshuaKGoldberg/github-notifications-prune/blob/main/LICENSE.md" target="_blank"><img alt="📝 License: MIT" src="https://img.shields.io/badge/%F0%9F%93%9D_license-MIT-21bb42.svg"></a>
-	<a href="http://npmjs.com/package/github-notifications-prune"><img alt="📦 npm version" src="https://img.shields.io/npm/v/github-notifications-prune?color=21bb42&label=%F0%9F%93%A6%20npm" /></a>
+	<a href="https://github.com/JoshuaKGoldberg/prune-github-notifications/blob/main/.github/CODE_OF_CONDUCT.md" target="_blank"><img alt="🤝 Code of Conduct: Kept" src="https://img.shields.io/badge/%F0%9F%A4%9D_code_of_conduct-kept-21bb42" /></a>
+	<a href="https://codecov.io/gh/JoshuaKGoldberg/prune-github-notifications" target="_blank"><img alt="🧪 Coverage" src="https://img.shields.io/codecov/c/github/JoshuaKGoldberg/prune-github-notifications?label=%F0%9F%A7%AA%20coverage" /></a>
+	<a href="https://github.com/JoshuaKGoldberg/prune-github-notifications/blob/main/LICENSE.md" target="_blank"><img alt="📝 License: MIT" src="https://img.shields.io/badge/%F0%9F%93%9D_license-MIT-21bb42.svg"></a>
+	<a href="http://npmjs.com/package/prune-github-notifications"><img alt="📦 npm version" src="https://img.shields.io/npm/v/prune-github-notifications?color=21bb42&label=%F0%9F%93%A6%20npm" /></a>
 	<img alt="💪 TypeScript: Strict" src="https://img.shields.io/badge/%F0%9F%92%AA_typescript-strict-21bb42.svg" />
 </p>
 
-`github-notifications-prune` is a one-stop-shop solution to set up a new or existing repository with the latest and greatest TypeScript tooling.
-It includes options not just for building and testing but also GitHub repository templates, contributor recognition, automated release management, and more.
+## CLI
+
+`prune-github-notifications` can be run on the CLI with an auth token for _notifications_ access specified as a `GH_TOKEN` environment variable:
+
+```shell
+GH_TOKEN=$(gh auth token) npx prune-github-notifications
+```
+
+### CLI Options
+
+Only `auth` is required, and only if a `GH_TOKEN` isn't available.
+
+| Option        | Type       | Default                          | Description                                              |
+| ------------- | ---------- | -------------------------------- | -------------------------------------------------------- |
+| `--auth`      | `string`   | `process.env.GH_TOKEN`           | GitHub authentication token with _notifications_ access. |
+| `--bandwidth` | `number`   | `6`                              | Maximum parallel requests to start at once.              |
+| `--reason`    | `string[]` | `["subscribed"]`                 | Notification reason(s) to filter to.                     |
+| `--title`     | `string`   | `"^chore\(deps\): update .+ to"` | Notification title regular expression to filter to.      |
+
+For example, providing all options on the CLI:
+
+```shell
+npx prune-github-notifications --auth $(gh auth token) --bandwidth 10 --reason subscribed --title "^chore.+ update .+ to"
+```
+
+## Node.js API
+
+```shell
+npm i prune-github-notifications
+```
+
+```ts
+import { pruneGitHubNotifications } from "prune-github-notifications";
+
+await pruneGitHubNotifications({ auth: "gho_..." });
+```
+
+If a `process.env.GH_TOKEN` is set, then the `auth` parameter will default to it:
+
+```ts
+await pruneGitHubNotifications();
+```
+
+### Node.js Options
+
+Only `auth` is required, and only if a `GH_TOKEN` isn't available.
+
+| Option      | Type          | Default                          | Description                                              |
+| ----------- | ------------- | -------------------------------- | -------------------------------------------------------- |
+| `auth`      | `string`      | `process.env.GH_TOKEN`           | GitHub authentication token with _notifications_ access. |
+| `bandwidth` | `number`      | `6`                              | Maximum parallel requests to start at once.              |
+| `reason`    | `Set<string>` | `Set {"subscribed"}`             | Notification reason(s) to filter to.                     |
+| `title`     | `string`      | `/^chore\(deps\): update .+ to/` | Notification title regular expression to filter to.      |
+
+For example, providing all options to the Node.js API:
+
+```ts
+await pruneGitHubNotifications({
+	auth: "gho_...",
+	bandwidth: 10,
+	reason: subscribed,
+	title: "^chore.+ update .+ to",
+});
+```
 
 ## Development
 

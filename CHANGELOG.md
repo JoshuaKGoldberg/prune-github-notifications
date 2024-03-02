@@ -2,6 +2,6 @@
 
 ### Features
 
-- initialized repo ✨ ([8693bed](https://github.com/JoshuaKGoldberg/github-notifications-prune/commit/8693bede4403bf033093745840abc4a641b604bd))
+- initialized repo ✨ ([8693bed](https://github.com/JoshuaKGoldberg/prune-github-notifications/commit/8693bede4403bf033093745840abc4a641b604bd))
 
 # Changelog

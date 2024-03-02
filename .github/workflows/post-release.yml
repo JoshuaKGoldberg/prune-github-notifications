@@ -14,8 +14,8 @@ jobs:
 
             The release is available on:
 
-            * [GitHub releases](https://github.com/JoshuaKGoldberg/github-notifications-prune/releases/tag/{release_tag})
-            * [npm package (@latest dist-tag)](https://www.npmjs.com/package/github-notifications-prune/v/${{ env.npm_version }})
+            * [GitHub releases](https://github.com/JoshuaKGoldberg/prune-github-notifications/releases/tag/{release_tag})
+            * [npm package (@latest dist-tag)](https://www.npmjs.com/package/prune-github-notifications/v/${{ env.npm_version }})
 
             Cheers! 📦🚀
 

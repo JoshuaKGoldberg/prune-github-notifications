@@ -1,13 +1,13 @@
 # Development
 
-> If you'd like a more guided walkthrough, see [Contributing to a github-notifications-prune Repository](https://www.joshuakgoldberg.com/blog/contributing-to-a-github-notifications-prune-repository).
+> If you'd like a more guided walkthrough, see [Contributing to a prune-github-notifications Repository](https://www.joshuakgoldberg.com/blog/contributing-to-a-prune-github-notifications-repository).
 > It'll walk you through the common activities you'll need to contribute.
 
 After [forking the repo from GitHub](https://help.github.com/articles/fork-a-repo) and [installing pnpm](https://pnpm.io/installation):
 
 ```shell
-git clone https://github.com/<your-name-here>/github-notifications-prune
-cd github-notifications-prune
+git clone https://github.com/<your-name-here>/prune-github-notifications
+cd prune-github-notifications
 pnpm install
 ```
 
