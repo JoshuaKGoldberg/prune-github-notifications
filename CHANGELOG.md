@@ -1,3 +1,9 @@
+# [0.2.0](https://github.com/JoshuaKGoldberg/prune-github-notifications/compare/0.1.0...0.2.0) (2024-03-02)
+
+### Features
+
+- initial working version ([bdf5e6e](https://github.com/JoshuaKGoldberg/prune-github-notifications/commit/bdf5e6e7c6c3f32a38694218e4f56a3a21ada459))
+
 # 0.1.0 (2024-03-02)
 
 ### Features
