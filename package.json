@@ -34,6 +34,7 @@
 		"*": "prettier --ignore-unknown --write"
 	},
 	"dependencies": {
+		"octokit": "^3.1.2",
 		"throttled-queue": "^2.1.4",
 		"zod": "^3.22.4"
 	},
@@ -64,7 +65,6 @@
 		"lint-staged": "^15.2.2",
 		"markdownlint": "^0.33.0",
 		"markdownlint-cli": "^0.39.0",
-		"octokit": "^3.1.2",
 		"prettier": "^3.2.5",
 		"prettier-plugin-curly": "^0.1.4",
 		"prettier-plugin-packagejson": "^2.4.12",
