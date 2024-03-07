@@ -1,3 +1,9 @@
+## [0.2.1](https://github.com/JoshuaKGoldberg/prune-github-notifications/compare/0.2.0...0.2.1) (2024-03-07)
+
+### Bug Fixes
+
+- list octokit as a full dependency ([e028fc5](https://github.com/JoshuaKGoldberg/prune-github-notifications/commit/e028fc5c9d08fc4ccee73e98105de5f68e8a12a6))
+
 # [0.2.0](https://github.com/JoshuaKGoldberg/prune-github-notifications/compare/0.1.0...0.2.0) (2024-03-02)
 
 ### Features
