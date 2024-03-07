@@ -67,7 +67,7 @@ Only `auth` is required, and only if a `GH_TOKEN` isn't available.
 | `auth`      | `string`      | `process.env.GH_TOKEN`           | GitHub authentication token with _notifications_ access. |
 | `bandwidth` | `number`      | `6`                              | Maximum parallel requests to start at once.              |
 | `reason`    | `Set<string>` | `Set {"subscribed"}`             | Notification reason(s) to filter to.                     |
-| `title`     | `string`      | `/^chore\(deps\): update .+ to/` | Notification title regular expression to filter to.      |
+| `title`     | `RegExp`      | `/^chore\(deps\): update .+ to/` | Notification title regular expression to filter to.      |
 
 For example, providing all options to the Node.js API:
 
