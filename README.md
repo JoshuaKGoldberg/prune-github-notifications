@@ -27,17 +27,24 @@ GH_TOKEN=$(gh auth token) npx prune-github-notifications
 
 Only `auth` is required, and only if a `GH_TOKEN` isn't available.
 
-| Option        | Type       | Default                          | Description                                              |
-| ------------- | ---------- | -------------------------------- | -------------------------------------------------------- |
-| `--auth`      | `string`   | `process.env.GH_TOKEN`           | GitHub authentication token with _notifications_ access. |
-| `--bandwidth` | `number`   | `6`                              | Maximum parallel requests to start at once.              |
-| `--reason`    | `string[]` | `["subscribed"]`                 | Notification reason(s) to filter to.                     |
-| `--title`     | `string`   | `"^chore\(deps\): update .+ to"` | Notification title regular expression to filter to.      |
+| Option        | Type       | Default                          | Description                                                   |
+| ------------- | ---------- | -------------------------------- | ------------------------------------------------------------- |
+| `--auth`      | `string`   | `process.env.GH_TOKEN`           | GitHub authentication token with _notifications_ access.      |
+| `--bandwidth` | `number`   | `6`                              | Maximum parallel requests to start at once.                   |
+| `--reason`    | `string[]` | `["subscribed"]`                 | Notification reason(s) to filter to.                          |
+| `--title`     | `string`   | `"^chore\(deps\): update .+ to"` | Notification title regular expression to filter to.           |
+| `--watch`     | `number`   | `0`                              | A seconds interval to continuously re-run this on, if truthy. |
 
 For example, providing all options on the CLI:
 
 ```shell
 npx prune-github-notifications --auth $(gh auth token) --bandwidth 10 --reason subscribed --title "^chore.+ update .+ to"
+```
+
+Running in watch mode to clear notifications every ten seconds:
+
+```shell
+npx prune-github-notifications --auth $(gh auth token) --watch 10
 ```
 
 ## Node.js API

@@ -2,6 +2,7 @@ import { parseArgs } from "node:util";
 import * as z from "zod";
 
 import { pruneGitHubNotifications } from "./pruneGitHubNotifications.js";
+import { runInWatch } from "./runInWatch.js";
 
 const schema = z.object({
 	auth: z.string({
@@ -17,6 +18,7 @@ const schema = z.object({
 		.string()
 		.transform((value) => new RegExp(value))
 		.optional(),
+	watch: z.coerce.number().optional(),
 });
 
 export async function pruneGitHubNotificationsCLI(args: string[]) {
@@ -37,18 +39,24 @@ export async function pruneGitHubNotificationsCLI(args: string[]) {
 			title: {
 				type: "string",
 			},
+			watch: {
+				type: "string",
+			},
 		},
 		tokens: true,
 	});
 
-	const { auth, bandwidth, reason, title } = schema.parse(values);
+	const { auth, bandwidth, reason, title, watch } = schema.parse(values);
 
-	await pruneGitHubNotifications({
-		auth,
-		bandwidth,
-		filters: {
-			reason,
-			title,
-		},
-	});
+	const action = async () =>
+		await pruneGitHubNotifications({
+			auth,
+			bandwidth,
+			filters: {
+				reason,
+				title,
+			},
+		});
+
+	await (watch ? runInWatch(action, watch) : action());
 }
