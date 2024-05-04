@@ -1,3 +1,9 @@
+# [0.3.0](https://github.com/JoshuaKGoldberg/prune-github-notifications/compare/0.2.1...0.3.0) (2024-05-04)
+
+### Features
+
+- --watch mode ([506fffe](https://github.com/JoshuaKGoldberg/prune-github-notifications/commit/506fffed8fd0bae7cf35d4f9d120e1d06a3d93e8))
+
 ## [0.2.1](https://github.com/JoshuaKGoldberg/prune-github-notifications/compare/0.2.0...0.2.1) (2024-03-07)
 
 ### Bug Fixes
