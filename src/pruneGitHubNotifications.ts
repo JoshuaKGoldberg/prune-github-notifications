@@ -3,7 +3,10 @@ import throttledQueue from "throttled-queue";
 
 import { createThreadFilter } from "./createThreadFilter.js";
 import { defaultOptions } from "./options.js";
-import { PruneGitHubNotificationsOptions } from "./types.js";
+import {
+	PruneGitHubNotificationsOptions,
+	PruneGitHubNotificationsResult,
+} from "./types.js";
 
 type ThrottledQueue = (
 	maxRequestsPerInterval: number,
@@ -15,7 +18,7 @@ export async function pruneGitHubNotifications({
 	auth,
 	bandwidth = defaultOptions.bandwidth,
 	filters,
-}: PruneGitHubNotificationsOptions = {}): Promise<void> {
+}: PruneGitHubNotificationsOptions = {}): Promise<PruneGitHubNotificationsResult> {
 	auth ??= process.env.GH_TOKEN;
 	if (!auth) {
 		throw new Error(`Please provide an auth token (process.env.GH_TOKEN).`);
@@ -39,12 +42,12 @@ export async function pruneGitHubNotifications({
 		1000,
 	);
 
-	const threadsToIgnore = notifications.data
+	const threads = notifications.data
 		.filter(threadFilter)
 		.map((thread) => Number(thread.id));
 
 	await Promise.all(
-		threadsToIgnore.map(async (thread) => {
+		threads.map(async (thread) => {
 			await throttle(async () => {
 				await octokit.request("DELETE /notifications/threads/{thread_id}", {
 					headers: {
@@ -64,4 +67,6 @@ export async function pruneGitHubNotifications({
 			});
 		}),
 	);
+
+	return { threads };
 }
