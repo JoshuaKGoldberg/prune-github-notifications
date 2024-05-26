@@ -1,3 +1,4 @@
+import { getGitHubAuthToken } from "get-github-auth-token";
 import { Octokit } from "octokit";
 import throttledQueue from "throttled-queue";
 
@@ -15,16 +16,15 @@ type ThrottledQueue = (
 ) => <Return = unknown>(fn: () => Promise<Return> | Return) => Promise<Return>;
 
 export async function pruneGitHubNotifications({
-	auth,
 	bandwidth = defaultOptions.bandwidth,
 	filters,
 }: PruneGitHubNotificationsOptions = {}): Promise<PruneGitHubNotificationsResult> {
-	auth ??= process.env.GH_TOKEN;
-	if (!auth) {
-		throw new Error(`Please provide an auth token (process.env.GH_TOKEN).`);
+	const auth = await getGitHubAuthToken();
+	if (!auth.succeeded) {
+		throw new Error(auth.error);
 	}
 
-	const octokit = new Octokit({ auth });
+	const octokit = new Octokit({ auth: auth.token });
 	const notifications = await octokit.request("GET /notifications", {
 		headers: {
 			"X-GitHub-Api-Version": "2022-11-28",

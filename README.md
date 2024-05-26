@@ -17,19 +17,18 @@
 
 ## CLI
 
-`prune-github-notifications` can be run on the CLI with an auth token for _notifications_ access specified as a `GH_TOKEN` environment variable:
+`prune-github-notifications` can be run on the CLI with an auth token for _notifications_ access:
 
 ```shell
-GH_TOKEN=$(gh auth token) npx prune-github-notifications
+npx prune-github-notifications
 ```
+
+[`get-github-auth-token`](https://github.com/JoshuaKGoldberg/get-github-auth-token) is used to retrieve a GitHub auth token from `process.env.GH_TOKEN` or executing `gh auth token`.
 
 ### CLI Options
 
-Only `auth` is required, and only if a `GH_TOKEN` isn't available.
-
 | Option        | Type       | Default                          | Description                                                   |
 | ------------- | ---------- | -------------------------------- | ------------------------------------------------------------- |
-| `--auth`      | `string`   | `process.env.GH_TOKEN`           | GitHub authentication token with _notifications_ access.      |
 | `--bandwidth` | `number`   | `6`                              | Maximum parallel requests to start at once.                   |
 | `--reason`    | `string[]` | `["subscribed"]`                 | Notification reason(s) to filter to.                          |
 | `--title`     | `string`   | `"^chore\(deps\): update .+ to"` | Notification title regular expression to filter to.           |
@@ -38,13 +37,13 @@ Only `auth` is required, and only if a `GH_TOKEN` isn't available.
 For example, providing all options on the CLI:
 
 ```shell
-npx prune-github-notifications --auth $(gh auth token) --bandwidth 10 --reason subscribed --title "^chore.+ update .+ to"
+npx prune-github-notifications --bandwidth 10 --reason subscribed --title "^chore.+ update .+ to"
 ```
 
 Running in watch mode to clear notifications every ten seconds:
 
 ```shell
-npx prune-github-notifications --auth $(gh auth token) --watch 10
+npx prune-github-notifications --watch 10
 ```
 
 ## Node.js API

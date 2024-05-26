@@ -6,7 +6,7 @@ import { runInWatch } from "./runInWatch.js";
 const mockLog = vi.fn();
 const mockSetTimeout = vi.fn();
 
-describe("pruneGitHubNotificationsCLI", () => {
+describe("runInWatch", () => {
 	beforeEach(() => {
 		console.log = mockLog;
 		globalThis.setTimeout = mockSetTimeout as unknown as typeof setTimeout;
