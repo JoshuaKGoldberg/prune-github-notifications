@@ -37,7 +37,7 @@ describe("pruneGitHubNotificationsCLI", () => {
 			bandwidth: 123,
 			filters: {
 				reason: new Set(["abc", "def"]),
-				title: /abc.+def/,
+				title: [/abc.+def/],
 			},
 		});
 		expect(mockRunInWatch).not.toHaveBeenCalled();
@@ -61,7 +61,7 @@ describe("pruneGitHubNotificationsCLI", () => {
 			bandwidth: 123,
 			filters: {
 				reason: new Set(["abc", "def"]),
-				title: /abc.+def/,
+				title: [/abc.+def/],
 			},
 		});
 		expect(mockRunInWatch).toHaveBeenCalledWith(expect.any(Function), 10);
