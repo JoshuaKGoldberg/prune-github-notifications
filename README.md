@@ -27,12 +27,12 @@ npx prune-github-notifications
 
 ### CLI Options
 
-| Option        | Type       | Default                          | Description                                                   |
-| ------------- | ---------- | -------------------------------- | ------------------------------------------------------------- |
-| `--bandwidth` | `number`   | `6`                              | Maximum parallel requests to start at once.                   |
-| `--reason`    | `string[]` | `["subscribed"]`                 | Notification reason(s) to filter to.                          |
-| `--title`     | `string`   | `"^chore\(deps\): update .+ to"` | Notification title regular expression to filter to.           |
-| `--watch`     | `number`   | `0`                              | A seconds interval to continuously re-run this on, if truthy. |
+| Option        | Type       | Default                                                              | Description                                                   |
+| ------------- | ---------- | -------------------------------------------------------------------- | ------------------------------------------------------------- |
+| `--bandwidth` | `number`   | `6`                                                                  | Maximum parallel requests to start at once.                   |
+| `--reason`    | `string[]` | `["subscribed"]`                                                     | Notification reason(s) to filter to.                          |
+| `--title`     | `string[]` | `["^chore\(deps\): update .+ to", /^build\(deps-dev\): bump .+ to"]` | Notification title regular expressions to filter to.          |
+| `--watch`     | `number`   | `0`                                                                  | A seconds interval to continuously re-run this on, if truthy. |
 
 For example, providing all options on the CLI:
 
@@ -68,12 +68,12 @@ await pruneGitHubNotifications();
 
 Only `auth` is required, and only if a `GH_TOKEN` isn't available.
 
-| Option      | Type          | Default                          | Description                                              |
-| ----------- | ------------- | -------------------------------- | -------------------------------------------------------- |
-| `auth`      | `string`      | `process.env.GH_TOKEN`           | GitHub authentication token with _notifications_ access. |
-| `bandwidth` | `number`      | `6`                              | Maximum parallel requests to start at once.              |
-| `reason`    | `Set<string>` | `Set {"subscribed"}`             | Notification reason(s) to filter to.                     |
-| `title`     | `RegExp`      | `/^chore\(deps\): update .+ to/` | Notification title regular expression to filter to.      |
+| Option      | Type          | Default                                                              | Description                                              |
+| ----------- | ------------- | -------------------------------------------------------------------- | -------------------------------------------------------- |
+| `auth`      | `string`      | `process.env.GH_TOKEN`                                               | GitHub authentication token with _notifications_ access. |
+| `bandwidth` | `number`      | `6`                                                                  | Maximum parallel requests to start at once.              |
+| `reason`    | `Set<string>` | `Set {"subscribed"}`                                                 | Notification reason(s) to filter to.                     |
+| `title`     | `RegExp[]`    | `[/^chore\(deps\): update .+ to/, /^build\(deps-dev\): bump .+ to/]` | Notification title regular expressions to filter to.     |
 
 For example, providing all options to the Node.js API:
 
@@ -82,7 +82,7 @@ await pruneGitHubNotifications({
 	auth: "gho_...",
 	bandwidth: 10,
 	reason: subscribed,
-	title: "^chore.+ update .+ to",
+	title: ["^chore.+ update .+ to"],
 });
 ```
 

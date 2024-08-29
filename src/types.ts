@@ -5,7 +5,7 @@ export interface PruneGitHubNotificationsOptions {
 
 export interface FilterOptions {
 	reason: ReadonlySet<string>;
-	title: RegExp;
+	title: RegExp[];
 }
 
 export interface PruneGitHubNotificationsResult {

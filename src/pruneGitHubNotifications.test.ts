@@ -108,7 +108,7 @@ describe("pruneGitHubNotifications", () => {
 		});
 
 		await pruneGitHubNotifications({
-			filters: { reason: new Set(["other-reason"]), title: /other title/ },
+			filters: { reason: new Set(["other-reason"]), title: [/other title/] },
 		});
 
 		expect(mockRequest.mock.calls).toMatchInlineSnapshot(`

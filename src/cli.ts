@@ -11,8 +11,8 @@ const schema = z.object({
 		.optional()
 		.transform((value) => value && new Set(value)),
 	title: z
-		.string()
-		.transform((value) => new RegExp(value))
+		.array(z.string())
+		.transform((values) => values.map((value) => new RegExp(value)))
 		.optional(),
 	watch: z.coerce.number().optional(),
 });
@@ -33,6 +33,7 @@ export async function pruneGitHubNotificationsCLI(args: string[]) {
 				type: "string",
 			},
 			title: {
+				multiple: true,
 				type: "string",
 			},
 			watch: {
