@@ -35,8 +35,7 @@
 	},
 	"dependencies": {
 		"chalk": "^5.3.0",
-		"get-github-auth-token": "^0.1.0",
-		"octokit": "^3.1.2",
+		"octokit-from-auth": "^0.2.0",
 		"throttled-queue": "^2.1.4",
 		"zod": "^3.22.4"
 	},

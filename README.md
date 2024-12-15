@@ -23,18 +23,17 @@
 npx prune-github-notifications
 ```
 
-[`get-github-auth-token`](https://github.com/JoshuaKGoldberg/get-github-auth-token) is used to retrieve a GitHub auth token from `process.env.GH_TOKEN` or executing `gh auth token`.
-
 ### CLI Options
 
-| Option        | Type       | Default                                                              | Description                                                   |
-| ------------- | ---------- | -------------------------------------------------------------------- | ------------------------------------------------------------- |
-| `--bandwidth` | `number`   | `6`                                                                  | Maximum parallel requests to start at once.                   |
-| `--reason`    | `string[]` | `["subscribed"]`                                                     | Notification reason(s) to filter to.                          |
-| `--title`     | `string[]` | `["^chore\(deps\): update .+ to", /^build\(deps-dev\): bump .+ to"]` | Notification title regular expressions to filter to.          |
-| `--watch`     | `number`   | `0`                                                                  | A seconds interval to continuously re-run this on, if truthy. |
+| Option        | Type       | Default                                                              | Description                                                                                             |
+| ------------- | ---------- | -------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- |
+| `--auth`      | `string`   | `process.env.GH_TOKEN` or executing `gh auth token`                  | Auth token for GitHub from [`octokit-from-auth`](https://github.com/JoshuaKGoldberg/octokit-from-auth). |
+| `--bandwidth` | `number`   | `6`                                                                  | Maximum parallel requests to start at once.                                                             |
+| `--reason`    | `string[]` | `["subscribed"]`                                                     | Notification reason(s) to filter to.                                                                    |
+| `--title`     | `string[]` | `["^chore\(deps\): update .+ to", /^build\(deps-dev\): bump .+ to"]` | Notification title regular expressions to filter to.                                                    |
+| `--watch`     | `number`   | `0`                                                                  | A seconds interval to continuously re-run this on, if truthy.                                           |
 
-For example, providing all options on the CLI:
+For example, providing all functional options on the CLI:
 
 ```shell
 npx prune-github-notifications --bandwidth 10 --reason subscribed --title "^chore.+ update .+ to"
