@@ -1,4 +1,5 @@
 export interface PruneGitHubNotificationsOptions {
+	auth?: string;
 	bandwidth?: number;
 	filters?: Partial<FilterOptions>;
 }
