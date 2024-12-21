@@ -1,6 +1,6 @@
 {
 	"name": "prune-github-notifications",
-	"version": "0.5.0",
+	"version": "0.6.0",
 	"description": "Prunes GitHub notifications you don't care about, such as automated dependency bumps. 🧹",
 	"repository": {
 		"type": "git",

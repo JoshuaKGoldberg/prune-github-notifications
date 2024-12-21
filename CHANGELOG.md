@@ -1,3 +1,15 @@
+# [0.6.0](https://github.com/JoshuaKGoldberg/prune-github-notifications/compare/0.4.0...0.6.0) (2024-12-21)
+
+### Bug Fixes
+
+- update all dependencies to latest ([336e456](https://github.com/JoshuaKGoldberg/prune-github-notifications/commit/336e4561e3a6dd4b0883162f6b5f2c4083e6a1ab))
+
+### Features
+
+- allow multiple title filter ([eb0c4a7](https://github.com/JoshuaKGoldberg/prune-github-notifications/commit/eb0c4a7bb0eb3b471c9f9826bbb46b91dcffc205))
+- allow multiple title filters ([82ee198](https://github.com/JoshuaKGoldberg/prune-github-notifications/commit/82ee198ceff3d4854aa13361021f23c7c0c24bd5))
+- use octokit-from-auth package ([#185](https://github.com/JoshuaKGoldberg/prune-github-notifications/issues/185)) ([2e05cbc](https://github.com/JoshuaKGoldberg/prune-github-notifications/commit/2e05cbca7fb793a38f42cc4a9dd0004be0c1c6bf)), closes [#184](https://github.com/JoshuaKGoldberg/prune-github-notifications/issues/184)
+
 # [0.4.0](https://github.com/JoshuaKGoldberg/prune-github-notifications/compare/0.3.0...0.4.0) (2024-05-26)
 
 ### Features
