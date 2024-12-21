@@ -64,7 +64,7 @@ describe("runInWatch", () => {
 		const { promise, resolve } = withResolvers();
 		let runCount = 0;
 
-		mockSetTimeout.mockImplementation((action) => {
+		mockSetTimeout.mockImplementation((action: () => void) => {
 			if ((runCount += 1) < 3) {
 				action();
 			} else {

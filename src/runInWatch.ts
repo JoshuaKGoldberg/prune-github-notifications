@@ -15,7 +15,7 @@ export async function runInWatch(
 		console.log(
 			time,
 			threads.length
-				? `Pruned ${threads.length} thread${threads.length === 1 ? "" : "s"}.`
+				? `Pruned ${threads.length.toString()} thread${threads.length === 1 ? "" : "s"}.`
 				: chalk.gray(`No threads found.`),
 		);
 
