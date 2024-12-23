@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, test } from "vitest";
 
 import { createThreadFilter } from "./createThreadFilter.js";
 
@@ -49,5 +49,33 @@ describe("createThreadFilter", () => {
 		const actual = filter(thread);
 
 		expect(actual).toBe(true);
+	});
+
+	test("common defaults", () => {
+		const filter = createThreadFilter({
+			reason: new Set(["subscribed"]),
+			title: [/^chore\(deps\): update .+ to/, /^build\(deps-dev\): bump .+ to/],
+		});
+
+		const threads = [
+			{
+				reason: "subscribed",
+				subject: {
+					title: "chore(deps): update pnpm to v9.15.1",
+					type: "PullRequest",
+				},
+			},
+			{
+				reason: "subscribed",
+				subject: {
+					title: "build(deps-dev): bump esbuild from 0.24.1 to 0.24.2",
+					type: "PullRequest",
+				},
+			},
+		];
+
+		const actual = threads.filter(filter);
+
+		expect(actual).toEqual(threads);
 	});
 });
