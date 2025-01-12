@@ -38,9 +38,17 @@ export async function pruneGitHubNotifications({
 		1000,
 	);
 
-	const threads = notifications.data
-		.filter(threadFilter)
-		.map((thread) => Number(thread.id));
+	const matchingThreads = notifications.data.filter(threadFilter);
+
+	if (matchingThreads.length === 0) {
+		console.log(
+			"No notifications found matching the filter criteria:",
+			filters,
+		);
+		return { threads: [] };
+	}
+
+	const threads = matchingThreads.map((thread) => Number(thread.id));
 
 	await Promise.all(
 		threads.map(async (thread) => {

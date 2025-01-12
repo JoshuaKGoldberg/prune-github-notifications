@@ -11,6 +11,6 @@ export interface FilterableThreadSubject {
 
 export function createThreadFilter({ reason, title }: FilterOptions) {
 	return (thread: FilterableThread) =>
-		reason.has(thread.reason) &&
+		(reason.has("any") || reason.has(thread.reason)) &&
 		title.some((tester) => tester.test(thread.subject.title));
 }

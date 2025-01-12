@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { pruneGitHubNotifications } from "./pruneGitHubNotifications.js";
 
@@ -113,5 +113,30 @@ describe("pruneGitHubNotifications", () => {
 			  ],
 			]
 		`);
+	});
+
+	it("logs a message when no notifications match the filters", async () => {
+		vi.spyOn(console, "log").mockImplementation(() => {
+			// Noop
+		});
+
+		mockRequest.mockResolvedValueOnce({
+			data: [
+				{
+					id: "90",
+					reason: "different",
+					subject: {
+						title: "unmatched title",
+					},
+				},
+			],
+		});
+
+		const result = await pruneGitHubNotifications();
+
+		expect(result.threads).toEqual([]);
+		expect(console.log).toHaveBeenCalledWith(
+			"No notifications found matching the filter criteria.",
+		);
 	});
 });
