@@ -114,4 +114,27 @@ describe("pruneGitHubNotifications", () => {
 			]
 		`);
 	});
+
+	it("logs a message when no notifications match the filters", async () => {
+		vi.spyOn(console, "log").mockImplementation(() => {
+			// Noop
+		});
+
+		mockRequest.mockResolvedValueOnce({
+			data: [
+				{
+					id: "90",
+					reason: "different",
+					subject: {
+						title: "unmatched title",
+					},
+				},
+			],
+		});
+
+		const result = await pruneGitHubNotifications({ logFilterWhenEmpty: true });
+
+		expect(result.threads).toEqual([]);
+		expect(console.log).toHaveBeenCalled();
+	});
 });
