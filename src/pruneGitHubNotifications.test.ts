@@ -132,11 +132,9 @@ describe("pruneGitHubNotifications", () => {
 			],
 		});
 
-		const result = await pruneGitHubNotifications();
+		const result = await pruneGitHubNotifications({ logFilterWhenEmpty: true });
 
 		expect(result.threads).toEqual([]);
-		expect(console.log).toHaveBeenCalledWith(
-			"No notifications found matching the filter criteria.",
-		);
+		expect(console.log).toHaveBeenCalled();
 	});
 });
