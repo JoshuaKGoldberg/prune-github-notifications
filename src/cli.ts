@@ -81,6 +81,7 @@ export async function pruneGitHubNotificationsCLI(args: string[]) {
 				reason,
 				title,
 			},
+			logFilterWhenEmpty: !watch,
 		});
 
 	await (watch ? runInWatch(action, watch) : action());

@@ -18,6 +18,7 @@ export async function pruneGitHubNotifications({
 	auth,
 	bandwidth = defaultOptions.bandwidth,
 	filters,
+	logFilterWhenEmpty = false,
 }: PruneGitHubNotificationsOptions = {}): Promise<PruneGitHubNotificationsResult> {
 	const octokit = await octokitFromAuth({ auth });
 
@@ -26,10 +27,13 @@ export async function pruneGitHubNotifications({
 			"X-GitHub-Api-Version": "2022-11-28",
 		},
 	});
-	const threadFilter = createThreadFilter({
+
+	const filtersWithDefaults = {
 		reason: filters?.reason ?? defaultOptions.filters.reason,
 		title: filters?.title ?? defaultOptions.filters.title,
-	});
+	};
+
+	const threadFilter = createThreadFilter(filtersWithDefaults);
 
 	// TODO: Why is the type not being friendly?
 	const throttle = (throttledQueue as unknown as ThrottledQueue)(
@@ -41,10 +45,12 @@ export async function pruneGitHubNotifications({
 	const matchingThreads = notifications.data.filter(threadFilter);
 
 	if (matchingThreads.length === 0) {
-		console.log(
-			"No notifications found matching the filter criteria:",
-			filters,
-		);
+		if (logFilterWhenEmpty) {
+			console.log(
+				"No notifications found matching the filter criteria:",
+				filtersWithDefaults,
+			);
+		}
 		return { threads: [] };
 	}
 
