@@ -39,6 +39,7 @@ describe("pruneGitHubNotificationsCLI", () => {
 				reason: new Set(["abc", "def"]),
 				title: [/abc.+def/],
 			},
+			logFilterWhenEmpty: true,
 		});
 		expect(mockRunInWatch).not.toHaveBeenCalled();
 	});
@@ -63,6 +64,7 @@ describe("pruneGitHubNotificationsCLI", () => {
 				reason: new Set(["abc", "def"]),
 				title: [/abc.+def/],
 			},
+			logFilterWhenEmpty: false,
 		});
 		expect(mockRunInWatch).toHaveBeenCalledWith(expect.any(Function), 10);
 	});
