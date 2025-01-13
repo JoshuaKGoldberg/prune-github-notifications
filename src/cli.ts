@@ -26,7 +26,12 @@ Examples:
 }
 
 const schema = z.object({
+	author: z
+		.array(z.string())
+		.optional()
+		.transform((value) => value && new Set(value)),
 	bandwidth: z.coerce.number().optional(),
+	botAuthors: z.boolean().optional(),
 	reason: z
 		.array(z.string())
 		.optional()
@@ -35,6 +40,7 @@ const schema = z.object({
 		.array(z.string())
 		.transform((values) => values.map((value) => new RegExp(value)))
 		.optional(),
+	verbose: z.boolean().optional(),
 	watch: z.coerce.number().optional(),
 });
 
@@ -46,8 +52,15 @@ export async function pruneGitHubNotificationsCLI(args: string[]) {
 				default: process.env.GH_TOKEN,
 				type: "string",
 			},
+			author: {
+				multiple: true,
+				type: "string",
+			},
 			bandwidth: {
 				type: "string",
+			},
+			botAuthors: {
+				type: "boolean",
 			},
 			help: {
 				type: "boolean",
@@ -59,6 +72,9 @@ export async function pruneGitHubNotificationsCLI(args: string[]) {
 			title: {
 				multiple: true,
 				type: "string",
+			},
+			verbose: {
+				type: "boolean",
 			},
 			watch: {
 				type: "string",
@@ -72,16 +88,20 @@ export async function pruneGitHubNotificationsCLI(args: string[]) {
 		return;
 	}
 
-	const { bandwidth, reason, title, watch } = schema.parse(values);
+	const { author, bandwidth, botAuthors, reason, title, verbose, watch } =
+		schema.parse(values);
 
 	const action = async () =>
 		await pruneGitHubNotifications({
 			bandwidth,
 			filters: {
+				author,
+				botAuthors,
 				reason,
 				title,
 			},
 			logFilterWhenEmpty: !watch,
+			verbose,
 		});
 
 	await (watch ? runInWatch(action, watch) : action());

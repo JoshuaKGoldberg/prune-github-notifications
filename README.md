@@ -32,6 +32,9 @@ npx prune-github-notifications
 | `--reason`    | `string[]` | `["subscribed"]`                                                     | Notification reason(s) to filter to.                                                                    |
 | `--title`     | `string[]` | `["^chore\(deps\): update .+ to", /^build\(deps-dev\): bump .+ to"]` | Notification title regular expressions to filter to.                                                    |
 | `--watch`     | `number`   | `0`                                                                  | A seconds interval to continuously re-run this on, if truthy.                                           |
+| `--author`    | `string[]` | -                                                                    | Usernames to ignore notifications from when reason is "author".                                         |
+| `--botAuthor` | `boolean`  | false                                                                | Ignore notifications from any authors with "[bot]" in their name                                        |
+| `--verbose`   | `boolean`  | false                                                                | Print information while processing notifications                                                        |
 
 For example, providing all functional options on the CLI:
 

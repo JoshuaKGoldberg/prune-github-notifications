@@ -8,6 +8,8 @@ export const defaultOptions = {
 	bandwidth: 6,
 
 	filters: {
+		author: undefined,
+		botAuthors: false,
 		reason: new Set(["subscribed"]),
 		title: [/^chore\(deps\): update .+ to/, /^build\(deps-dev\): bump .+ to/],
 	},

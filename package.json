@@ -1,5 +1,5 @@
 {
-	"name": "prune-github-notifications",
+	"name": "@seveibar/prune-github-notifications",
 	"version": "0.6.0",
 	"description": "Prunes GitHub notifications you don't care about, such as automated dependency bumps. 🧹",
 	"repository": {
@@ -79,8 +79,5 @@
 	},
 	"engines": {
 		"node": ">=20"
-	},
-	"publishConfig": {
-		"provenance": true
 	}
 }

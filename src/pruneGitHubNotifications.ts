@@ -1,7 +1,7 @@
 import { octokitFromAuth } from "octokit-from-auth";
 import throttledQueue from "throttled-queue";
 
-import { createThreadFilter } from "./createThreadFilter.js";
+import { createThreadFilter, FilterableThread } from "./createThreadFilter.js";
 import { defaultOptions } from "./options.js";
 import {
 	PruneGitHubNotificationsOptions,
@@ -19,6 +19,7 @@ export async function pruneGitHubNotifications({
 	bandwidth = defaultOptions.bandwidth,
 	filters,
 	logFilterWhenEmpty = false,
+	verbose = false,
 }: PruneGitHubNotificationsOptions = {}): Promise<PruneGitHubNotificationsResult> {
 	const octokit = await octokitFromAuth({ auth });
 
@@ -29,9 +30,36 @@ export async function pruneGitHubNotifications({
 	});
 
 	const filtersWithDefaults = {
+		author: filters?.author ?? defaultOptions.filters.author,
+		botAuthors: filters?.botAuthors ?? defaultOptions.filters.botAuthors,
 		reason: filters?.reason ?? defaultOptions.filters.reason,
 		title: filters?.title ?? defaultOptions.filters.title,
 	};
+
+	const notificationsWithAuthorData: FilterableThread[] =
+		notifications.data.map((notification) => ({
+			latest_comment_author: undefined,
+			latest_comment_url: notification.subject.latest_comment_url,
+			reason: notification.reason,
+			subject: notification.subject,
+		}));
+
+	if (filtersWithDefaults.author || filtersWithDefaults.botAuthors) {
+		// Add author data to each notification (if applicable)
+		for (const notification of notificationsWithAuthorData) {
+			if (notification.reason === "author" && notification.latest_comment_url) {
+				const comment = await octokit.request(
+					notification.latest_comment_url as unknown as "GET /repos/{owner}/{repo}/issues/comments/{comment_id}",
+				);
+
+				notification.latest_comment_author = comment.data.user?.login;
+			}
+		}
+	}
+
+	if (verbose) {
+		console.log(`Found ${notificationsWithAuthorData.length} notifications`);
+	}
 
 	const threadFilter = createThreadFilter(filtersWithDefaults);
 
@@ -42,9 +70,16 @@ export async function pruneGitHubNotifications({
 		1000,
 	);
 
-	const matchingThreads = notifications.data.filter(threadFilter);
+	const filteredThreads = notifications.data.filter(threadFilter);
 
-	if (matchingThreads.length === 0) {
+	if (verbose) {
+		console.log(
+			`Found ${filteredThreads.length} notifications matching the filter criteria`,
+		);
+		console.log("Starting deletion...");
+	}
+
+	if (filteredThreads.length === 0) {
 		if (logFilterWhenEmpty) {
 			console.log(
 				"No notifications found matching the filter criteria:",
@@ -54,7 +89,7 @@ export async function pruneGitHubNotifications({
 		return { threads: [] };
 	}
 
-	const threads = matchingThreads.map((thread) => Number(thread.id));
+	const threads = filteredThreads.map((thread) => Number(thread.id));
 
 	await Promise.all(
 		threads.map(async (thread) => {
@@ -77,6 +112,10 @@ export async function pruneGitHubNotifications({
 			});
 		}),
 	);
+
+	if (verbose) {
+		console.log(`Deleted ${threads.length} notifications`);
+	}
 
 	return { threads };
 }

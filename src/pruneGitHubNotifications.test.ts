@@ -115,6 +115,37 @@ describe("pruneGitHubNotifications", () => {
 		`);
 	});
 
+	it("filters out notifications from ignored authors", async () => {
+		mockRequest
+			.mockResolvedValueOnce({
+				data: [
+					{
+						id: "12",
+						latest_comment_url: "https://api.github.com/repos/test/comment/1",
+						reason: "author",
+						subject: { title: "Test PR" },
+					},
+				],
+			})
+			.mockResolvedValueOnce({
+				data: {
+					user: {
+						login: "ignored-user",
+					},
+				},
+			});
+
+		const result = await pruneGitHubNotifications({
+			filters: {
+				author: new Set(["ignored-user"]),
+				reason: new Set(["author"]),
+				title: [/.*/],
+			},
+		});
+
+		expect(result.threads).toEqual([]);
+	});
+
 	it("logs a message when no notifications match the filters", async () => {
 		vi.spyOn(console, "log").mockImplementation(() => {
 			// Noop
