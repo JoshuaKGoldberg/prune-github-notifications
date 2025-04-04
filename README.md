@@ -20,14 +20,74 @@
 
 ## Usage
 
+### CLI
+
+`prune-github-notifications` can be run on the CLI with an auth token for _notifications_ access:
+
+```shell
+npx prune-github-notifications
+```
+
+#### CLI Options
+
+| Option        | Type       | Default                                                              | Description                                                                                             |
+| ------------- | ---------- | -------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- |
+| `--auth`      | `string`   | `process.env.GH_TOKEN` or executing `gh auth token`                  | Auth token for GitHub from [`octokit-from-auth`](https://github.com/JoshuaKGoldberg/octokit-from-auth). |
+| `--bandwidth` | `number`   | `6`                                                                  | Maximum parallel requests to start at once.                                                             |
+| `--reason`    | `string[]` | `["subscribed"]`                                                     | Notification reason(s) to filter to.                                                                    |
+| `--title`     | `string[]` | `["^chore\(deps\): update .+ to", /^build\(deps-dev\): bump .+ to"]` | Notification title regular expressions to filter to.                                                    |
+| `--watch`     | `number`   | `0`                                                                  | A seconds interval to continuously re-run this on, if truthy.                                           |
+
+For example, providing all functional options on the CLI:
+
+```shell
+npx prune-github-notifications --bandwidth 10 --reason subscribed --title "^chore.+ update .+ to"
+```
+
+Running in watch mode to clear notifications every ten seconds:
+
+```shell
+npx prune-github-notifications --watch 10
+```
+
+### Node.js API
+
 ```shell
 npm i prune-github-notifications
 ```
 
 ```ts
-import { greet } from "prune-github-notifications";
+import { pruneGitHubNotifications } from "prune-github-notifications";
 
-greet("Hello, world! 🧹");
+await pruneGitHubNotifications({ auth: "gho_..." });
+```
+
+If a `process.env.GH_TOKEN` is set, then the `auth` parameter will default to it:
+
+```ts
+await pruneGitHubNotifications();
+```
+
+#### Node.js Options
+
+Only `auth` is required, and only if a `GH_TOKEN` isn't available.
+
+| Option      | Type          | Default                                                              | Description                                              |
+| ----------- | ------------- | -------------------------------------------------------------------- | -------------------------------------------------------- |
+| `auth`      | `string`      | `process.env.GH_TOKEN`                                               | GitHub authentication token with _notifications_ access. |
+| `bandwidth` | `number`      | `6`                                                                  | Maximum parallel requests to start at once.              |
+| `reason`    | `Set<string>` | `Set {"subscribed"}`                                                 | Notification reason(s) to filter to.                     |
+| `title`     | `RegExp[]`    | `[/^chore\(deps\): update .+ to/, /^build\(deps-dev\): bump .+ to/]` | Notification title regular expressions to filter to.     |
+
+For example, providing all options to the Node.js API:
+
+```ts
+await pruneGitHubNotifications({
+	auth: "gho_...",
+	bandwidth: 10,
+	reason: subscribed,
+	title: ["^chore.+ update .+ to"],
+});
 ```
 
 ## Development
