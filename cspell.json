@@ -1,10 +1,10 @@
 {
-	"dictionaries": ["typescript"],
+	"dictionaries": ["npm", "node", "typescript"],
 	"ignorePaths": [
-		"./coverage*",
-		"./script/__snapshots__",
+		".all-contributorsrc",
 		".github",
 		"CHANGELOG.md",
+		"coverage",
 		"lib",
 		"node_modules",
 		"pnpm-lock.yaml"

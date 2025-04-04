@@ -6,7 +6,7 @@
 After [forking the repo from GitHub](https://help.github.com/articles/fork-a-repo) and [installing pnpm](https://pnpm.io/installation):
 
 ```shell
-git clone https://github.com/<your-name-here>/prune-github-notifications
+git clone https://github.com/(your-name-here)/prune-github-notifications
 cd prune-github-notifications
 pnpm install
 ```
@@ -27,6 +27,12 @@ Add `--watch` to run the builder in a watch mode that continuously cleans and re
 ```shell
 pnpm build --watch
 ```
+
+### Built App Debugging
+
+This repository includes a [VS Code launch configuration](https://code.visualstudio.com/docs/editor/debugging) for debugging.
+To debug a `bin` app, add a breakpoint to your code, then run _Debug Program_ from the VS Code Debug panel (or press F5).
+VS Code will automatically run the `build` task in the background before running `bin/index.js`.
 
 ## Formatting
 
@@ -58,7 +64,7 @@ For example, ESLint can be run with `--fix` to auto-fix some lint rule complaint
 pnpm run lint --fix
 ```
 
-Note that you'll likely need to run `pnpm build` before `pnpm lint` so that lint rules which check the file system can pick up on any built files.
+Note that you'll need to run `pnpm build` before `pnpm lint` so that lint rules which check the file system can pick up on any built files.
 
 ## Testing
 
