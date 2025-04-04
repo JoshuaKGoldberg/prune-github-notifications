@@ -1,3 +1,11 @@
+# Changelog
+
+## [0.6.1](https://github.com/JoshuaKGoldberg/prune-github-notifications/compare/0.6.0...0.6.1) (2025-04-04)
+
+### Bug Fixes
+
+- bump to create-typescript-app@2 with transitions action ([#201](https://github.com/JoshuaKGoldberg/prune-github-notifications/issues/201)) ([9183833](https://github.com/JoshuaKGoldberg/prune-github-notifications/commit/91838339a32c1ff7b198859bba2fbd71106bf75b)), closes [#200](https://github.com/JoshuaKGoldberg/prune-github-notifications/issues/200)
+
 # [0.6.0](https://github.com/JoshuaKGoldberg/prune-github-notifications/compare/0.4.0...0.6.0) (2024-12-21)
 
 ### Bug Fixes
@@ -39,5 +47,3 @@
 ### Features
 
 - initialized repo ✨ ([8693bed](https://github.com/JoshuaKGoldberg/prune-github-notifications/commit/8693bede4403bf033093745840abc4a641b604bd))
-
-# Changelog
