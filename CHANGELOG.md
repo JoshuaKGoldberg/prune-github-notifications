@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.6.2](https://github.com/JoshuaKGoldberg/prune-github-notifications/compare/0.6.1...0.6.2) (2025-07-16)
+
+### Bug Fixes
+
+- **deps:** update dependency zod to v4 ([#313](https://github.com/JoshuaKGoldberg/prune-github-notifications/issues/313)) ([e0e4fab](https://github.com/JoshuaKGoldberg/prune-github-notifications/commit/e0e4fab64bc2d6df76c1fa70cd1fe0184b9ba9a3))
+
 ## [0.6.1](https://github.com/JoshuaKGoldberg/prune-github-notifications/compare/0.6.0...0.6.1) (2025-04-04)
 
 ### Bug Fixes
