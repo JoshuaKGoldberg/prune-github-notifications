@@ -18,8 +18,8 @@ importers:
         specifier: ^0.3.0
         version: 0.3.2
       throttled-queue:
-        specifier: ^2.1.4
-        version: 2.1.4
+        specifier: ^3.0.0
+        version: 3.0.0
       zod:
         specifier: ^4.0.0
         version: 4.3.6
@@ -3839,6 +3839,9 @@ packages:
 
   throttled-queue@2.1.4:
     resolution: {integrity: sha512-YGdk8sdmr4ge3g+doFj/7RLF5kLM+Mi7DEciu9PHxnMJZMeVuZeTj31g4VE7ekUffx/IdbvrtOCiz62afg0mkg==}
+
+  throttled-queue@3.0.0:
+    resolution: {integrity: sha512-8X5YUdgDHaqy9DmJzoRWK45o2vzBZ7Rt4bT1Mody4TUuYOXSb7paRwDPVspCZiiW4rxZopgZQAwnhI2LU0QwFQ==}
 
   tinybench@2.9.0:
     resolution: {integrity: sha512-0+DUvqWMValLmha6lr4kD8iAMK1HzV0/aKnCtWb9v9641TnP/MFb7Pc2bxoxQjTXAErryXVgUOfv2YqNllqGeg==}
@@ -8076,6 +8079,8 @@ snapshots:
       any-promise: 1.3.0
 
   throttled-queue@2.1.4: {}
+
+  throttled-queue@3.0.0: {}
 
   tinybench@2.9.0: {}
 
