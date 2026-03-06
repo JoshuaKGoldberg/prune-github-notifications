@@ -40,7 +40,7 @@
 		"@types/eslint-plugin-markdown": "^2.0.2",
 		"chalk": "^5.4.0",
 		"octokit-from-auth": "^0.3.0",
-		"throttled-queue": "^2.1.4",
+		"throttled-queue": "^3.0.0",
 		"zod": "^4.0.0"
 	},
 	"devDependencies": {
