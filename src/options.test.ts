@@ -21,12 +21,15 @@ describe("defaultOptions", () => {
 			it.each([
 				"bump abc to 1.2.3",
 				"lock file maintenance",
-				"fix(deps): bump abc to 1.2.3",
-				"fix(deps): lock file maintenance",
-				"fix(deps): update abc to 1.2.3",
+				"chore: bump abc to 1.2.3",
+				"feat: bump abc to 1.2.3",
+				"fix: bump abc to 1.2.3",
 				"feat(deps): bump abc to 1.2.3",
 				"feat(deps): lock file maintenance",
 				"feat(deps): update abc to 1.2.3",
+				"fix(deps): bump abc to 1.2.3",
+				"fix(deps): lock file maintenance",
+				"fix(deps): update abc to 1.2.3",
 			])("does not match %s", (title) => {
 				expect(
 					defaultOptions.filters.title.some((filter) => filter.test(title)),
