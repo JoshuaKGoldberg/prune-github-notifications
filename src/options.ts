@@ -9,6 +9,8 @@ export const defaultOptions = {
 
 	filters: {
 		reason: new Set(["subscribed"]),
-		title: [/^chore\(deps\): update .+ to/, /^build\(deps-dev\): bump .+ to/],
+		title: [
+			/^(?:build|chore)\(deps\): (?:(?:bump|update) .+ to|lock file maintenance)/,
+		],
 	},
 } satisfies PruneGitHubNotificationsOptions;
