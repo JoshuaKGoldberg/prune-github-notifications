@@ -12,7 +12,7 @@
 
 - bump to create-typescript-app@2 with transitions action ([#201](https://github.com/JoshuaKGoldberg/prune-github-notifications/issues/201)) ([9183833](https://github.com/JoshuaKGoldberg/prune-github-notifications/commit/91838339a32c1ff7b198859bba2fbd71106bf75b)), closes [#200](https://github.com/JoshuaKGoldberg/prune-github-notifications/issues/200)
 
-# [0.6.0](https://github.com/JoshuaKGoldberg/prune-github-notifications/compare/0.4.0...0.6.0) (2024-12-21)
+## [0.6.0](https://github.com/JoshuaKGoldberg/prune-github-notifications/compare/0.4.0...0.6.0) (2024-12-21)
 
 ### Bug Fixes
 
@@ -24,13 +24,13 @@
 - allow multiple title filters ([82ee198](https://github.com/JoshuaKGoldberg/prune-github-notifications/commit/82ee198ceff3d4854aa13361021f23c7c0c24bd5))
 - use octokit-from-auth package ([#185](https://github.com/JoshuaKGoldberg/prune-github-notifications/issues/185)) ([2e05cbc](https://github.com/JoshuaKGoldberg/prune-github-notifications/commit/2e05cbca7fb793a38f42cc4a9dd0004be0c1c6bf)), closes [#184](https://github.com/JoshuaKGoldberg/prune-github-notifications/issues/184)
 
-# [0.4.0](https://github.com/JoshuaKGoldberg/prune-github-notifications/compare/0.3.0...0.4.0) (2024-05-26)
+## [0.4.0](https://github.com/JoshuaKGoldberg/prune-github-notifications/compare/0.3.0...0.4.0) (2024-05-26)
 
 ### Features
 
 - use get-github-auth-token for gh auth tokens ([613d187](https://github.com/JoshuaKGoldberg/prune-github-notifications/commit/613d187b3a61c3b4e0ea71b614e834fe1a4994d6))
 
-# [0.3.0](https://github.com/JoshuaKGoldberg/prune-github-notifications/compare/0.2.1...0.3.0) (2024-05-04)
+## [0.3.0](https://github.com/JoshuaKGoldberg/prune-github-notifications/compare/0.2.1...0.3.0) (2024-05-04)
 
 ### Features
 
@@ -42,13 +42,13 @@
 
 - list octokit as a full dependency ([e028fc5](https://github.com/JoshuaKGoldberg/prune-github-notifications/commit/e028fc5c9d08fc4ccee73e98105de5f68e8a12a6))
 
-# [0.2.0](https://github.com/JoshuaKGoldberg/prune-github-notifications/compare/0.1.0...0.2.0) (2024-03-02)
+## [0.2.0](https://github.com/JoshuaKGoldberg/prune-github-notifications/compare/0.1.0...0.2.0) (2024-03-02)
 
 ### Features
 
 - initial working version ([bdf5e6e](https://github.com/JoshuaKGoldberg/prune-github-notifications/commit/bdf5e6e7c6c3f32a38694218e4f56a3a21ada459))
 
-# 0.1.0 (2024-03-02)
+## 0.1.0 (2024-03-02)
 
 ### Features
 
