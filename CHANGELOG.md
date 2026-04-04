@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.7.0](https://github.com/JoshuaKGoldberg/prune-github-notifications/compare/0.6.2...0.7.0) (2026-04-04)
+
+### Features
+
+- also match lock file maintenance titles by default ([#524](https://github.com/JoshuaKGoldberg/prune-github-notifications/issues/524)) ([39106e7](https://github.com/JoshuaKGoldberg/prune-github-notifications/commit/39106e7937407132112ec19df0fdedd5c629c464)), closes [#523](https://github.com/JoshuaKGoldberg/prune-github-notifications/issues/523)
+
+### Bug Fixes
+
+- ran create-typescript-app and ncu -u (March 2026) ([#535](https://github.com/JoshuaKGoldberg/prune-github-notifications/issues/535)) ([ac6b09e](https://github.com/JoshuaKGoldberg/prune-github-notifications/commit/ac6b09e6ee24e4e38fde2ab4b35039271d9a0758)), closes [#534](https://github.com/JoshuaKGoldberg/prune-github-notifications/issues/534)
+
 ## [0.6.2](https://github.com/JoshuaKGoldberg/prune-github-notifications/compare/0.6.1...0.6.2) (2025-07-16)
 
 ### Bug Fixes
