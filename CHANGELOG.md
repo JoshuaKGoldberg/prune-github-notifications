@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.7.1](https://github.com/JoshuaKGoldberg/prune-github-notifications/compare/0.7.0...0.7.1) (2026-07-29)
+
+### Bug Fixes
+
+- **deps:** update dependency chalk to v6 ([#683](https://github.com/JoshuaKGoldberg/prune-github-notifications/issues/683)) ([d974723](https://github.com/JoshuaKGoldberg/prune-github-notifications/commit/d974723688db323a717a1b3a911cccc69f4c654f))
+
 ## [0.7.0](https://github.com/JoshuaKGoldberg/prune-github-notifications/compare/0.6.2...0.7.0) (2026-04-04)
 
 ### Features
