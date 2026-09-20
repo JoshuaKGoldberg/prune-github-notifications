@@ -67,6 +67,23 @@ describe("pruneGitHubNotificationsCLI", () => {
 		});
 	});
 
+	it("passes createdBy to pruneGitHubNotifications when provided", async () => {
+		await pruneGitHubNotificationsCLI([
+			"--createdBy",
+			"^renovate",
+			"--createdBy",
+			"\\[bot\\]$",
+		]);
+
+		expect(mockPruneGitHubNotifications).toHaveBeenCalledWith({
+			bandwidth: undefined,
+			filters: {
+				...defaultOptions.filters,
+				createdBy: [/^renovate/, /\[bot\]$/],
+			},
+		});
+	});
+
 	it("passes lastCommentBy to pruneGitHubNotifications when provided", async () => {
 		await pruneGitHubNotificationsCLI([
 			"--lastCommentBy",

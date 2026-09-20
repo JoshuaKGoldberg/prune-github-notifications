@@ -2,9 +2,9 @@ import debug from "debug";
 import { octokitFromAuth } from "octokit-from-auth";
 import throttledQueue from "throttled-queue";
 
-import { createLastCommentByFilter } from "./createLastCommentByFilter.js";
+import { AuthorFilter, createAuthorFilter } from "./createAuthorFilter.js";
 import { createThreadFilter } from "./createThreadFilter.js";
-import { getLatestCommentAuthor } from "./getLatestCommentAuthor.js";
+import { getAuthorLogin } from "./getAuthorLogin.js";
 import { defaultOptions } from "./options.js";
 import { resolveFilters } from "./resolveFilters.js";
 import {
@@ -36,7 +36,6 @@ export async function pruneGitHubNotifications({
 
 	const resolvedFilters = resolveFilters(filters);
 	const threadFilter = createThreadFilter(resolvedFilters);
-	const lastCommentByFilter = createLastCommentByFilter(resolvedFilters);
 
 	// TODO: Why is the type not being friendly?
 	const throttle = (throttledQueue as unknown as ThrottledQueue)(
@@ -45,22 +44,34 @@ export async function pruneGitHubNotifications({
 		1000,
 	);
 
-	let matchingThreads = notifications.data.filter(threadFilter);
+	// Author logins take a request per thread, so only look them up if needed
+	const filterByAuthor = async <Thread>(
+		threads: Thread[],
+		authorFilter: AuthorFilter | undefined,
+		getUrl: (thread: Thread) => null | string | undefined,
+	) => {
+		if (!authorFilter) {
+			return threads;
+		}
 
-	// Comment authors take a request per thread, so only look them up if needed
-	if (lastCommentByFilter) {
 		const authors = await Promise.all(
-			matchingThreads.map((thread) =>
-				throttle(() =>
-					getLatestCommentAuthor(octokit, thread.subject.latest_comment_url),
-				),
+			threads.map((thread) =>
+				throttle(() => getAuthorLogin(octokit, getUrl(thread))),
 			),
 		);
 
-		matchingThreads = matchingThreads.filter((_, i) =>
-			lastCommentByFilter(authors[i]),
-		);
-	}
+		return threads.filter((_, i) => authorFilter(authors[i]));
+	};
+
+	const matchingThreads = await filterByAuthor(
+		await filterByAuthor(
+			notifications.data.filter(threadFilter),
+			createAuthorFilter(resolvedFilters.createdBy),
+			(thread) => thread.subject.url,
+		),
+		createAuthorFilter(resolvedFilters.lastCommentBy),
+		(thread) => thread.subject.latest_comment_url,
+	);
 
 	const threads = matchingThreads.map((thread) => Number(thread.id));
 

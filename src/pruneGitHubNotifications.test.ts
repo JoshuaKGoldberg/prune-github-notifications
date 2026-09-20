@@ -220,4 +220,104 @@ describe("pruneGitHubNotifications", () => {
 			`);
 		});
 	});
+
+	describe("createdBy", () => {
+		const notificationsWithAuthors = {
+			data: [
+				{
+					id: "12",
+					reason: "subscribed",
+					subject: {
+						latest_comment_url: "https://api.github.com/comments/1",
+						title: "PR by a bot",
+						url: "https://api.github.com/pulls/1",
+					},
+				},
+				{
+					id: "34",
+					reason: "subscribed",
+					subject: {
+						latest_comment_url: "https://api.github.com/comments/2",
+						title: "PR by a human",
+						url: "https://api.github.com/pulls/2",
+					},
+				},
+				{
+					id: "56",
+					reason: "subscribed",
+					subject: {
+						latest_comment_url: null,
+						title: "PR with no url",
+						url: null,
+					},
+				},
+			],
+		};
+
+		const authors: Record<string, string> = {
+			"GET https://api.github.com/comments/1": "human",
+			"GET https://api.github.com/comments/2": "codecov[bot]",
+			"GET https://api.github.com/pulls/1": "renovate[bot]",
+			"GET https://api.github.com/pulls/2": "human",
+		};
+
+		const mockNotificationsWithAuthors = () => {
+			mockRequest.mockImplementation((route: string) => {
+				if (route === "GET /notifications") {
+					return Promise.resolve(notificationsWithAuthors);
+				}
+
+				if (route in authors) {
+					return Promise.resolve({ data: { user: { login: authors[route] } } });
+				}
+
+				return Promise.resolve({});
+			});
+		};
+
+		afterEach(() => {
+			mockRequest.mockReset().mockResolvedValue(defaultNotifications);
+		});
+
+		it("only unsubscribes from threads whose author matches when createdBy is provided", async () => {
+			mockNotificationsWithAuthors();
+
+			const result = await pruneGitHubNotifications({
+				filters: {
+					createdBy: [/\[bot\]$/],
+					title: [/PR/],
+				},
+			});
+
+			expect(result.threads).toEqual([12]);
+			expect(
+				mockRequest.mock.calls.filter(([route]) =>
+					(route as string).startsWith("GET https://"),
+				),
+			).toHaveLength(2);
+		});
+
+		it("only requests comment authors for threads whose author matches when both createdBy and lastCommentBy are provided", async () => {
+			mockNotificationsWithAuthors();
+
+			const result = await pruneGitHubNotifications({
+				filters: {
+					createdBy: [/^human$/],
+					lastCommentBy: [/\[bot\]$/],
+					title: [/PR/],
+				},
+			});
+
+			expect(result.threads).toEqual([34]);
+			expect(
+				mockRequest.mock.calls
+					.map(([route]) => route as string)
+					.filter((route) => route.startsWith("GET https://")),
+			).toEqual([
+				"GET https://api.github.com/pulls/1",
+				"GET https://api.github.com/pulls/2",
+				"GET https://api.github.com/comments/2",
+			]);
+		});
+	});
 });

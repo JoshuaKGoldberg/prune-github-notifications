@@ -1,16 +1,16 @@
 import { describe, expect, it, vi } from "vitest";
 
-import { getLatestCommentAuthor } from "./getLatestCommentAuthor.js";
+import { getAuthorLogin } from "./getAuthorLogin.js";
 
 const mockRequest = vi.fn();
 
 const octokit = { request: mockRequest } as unknown as Parameters<
-	typeof getLatestCommentAuthor
+	typeof getAuthorLogin
 >[0];
 
-describe("getLatestCommentAuthor", () => {
+describe("getAuthorLogin", () => {
 	it("returns undefined without requesting when the url is null", async () => {
-		const actual = await getLatestCommentAuthor(octokit, null);
+		const actual = await getAuthorLogin(octokit, null);
 
 		expect(actual).toBeUndefined();
 		expect(mockRequest).not.toHaveBeenCalled();
@@ -19,7 +19,7 @@ describe("getLatestCommentAuthor", () => {
 	it("returns the user login when the url resolves to a comment with a user", async () => {
 		mockRequest.mockResolvedValueOnce({ data: { user: { login: "someone" } } });
 
-		const actual = await getLatestCommentAuthor(
+		const actual = await getAuthorLogin(
 			octokit,
 			"https://api.github.com/repos/a/b/issues/comments/1",
 		);
@@ -34,7 +34,7 @@ describe("getLatestCommentAuthor", () => {
 	it("returns undefined when the url resolves to data without a user", async () => {
 		mockRequest.mockResolvedValueOnce({ data: { user: null } });
 
-		const actual = await getLatestCommentAuthor(
+		const actual = await getAuthorLogin(
 			octokit,
 			"https://api.github.com/repos/a/b/issues/1",
 		);
