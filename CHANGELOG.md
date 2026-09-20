@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.8.0](https://github.com/JoshuaKGoldberg/prune-github-notifications/compare/0.7.1...0.8.0) (2026-09-20)
+
+### Features
+
+- add --help CLI flag ([#750](https://github.com/JoshuaKGoldberg/prune-github-notifications/issues/750)) ([64c0079](https://github.com/JoshuaKGoldberg/prune-github-notifications/commit/64c0079e3b7ea8e6ab9b0e5f4c243ea8855ccd9e)), closes [#747](https://github.com/JoshuaKGoldberg/prune-github-notifications/issues/747)
+
 ## [0.7.1](https://github.com/JoshuaKGoldberg/prune-github-notifications/compare/0.7.0...0.7.1) (2026-07-29)
 
 ### Bug Fixes
