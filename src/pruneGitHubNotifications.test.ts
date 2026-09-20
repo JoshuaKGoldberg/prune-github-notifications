@@ -117,7 +117,7 @@ describe("pruneGitHubNotifications", () => {
 		`);
 	});
 
-	describe("commentAuthor", () => {
+	describe("lastCommentBy", () => {
 		const notificationsWithComments = {
 			data: [
 				{
@@ -147,7 +147,7 @@ describe("pruneGitHubNotifications", () => {
 			],
 		};
 
-		const commentAuthors: Record<string, string> = {
+		const lastCommentBys: Record<string, string> = {
 			"GET https://api.github.com/comments/1": "codecov[bot]",
 			"GET https://api.github.com/comments/2": "human",
 		};
@@ -156,7 +156,7 @@ describe("pruneGitHubNotifications", () => {
 			mockRequest.mockReset().mockResolvedValue(defaultNotifications);
 		});
 
-		it("does not request comment data when commentAuthor is not provided", async () => {
+		it("does not request comment data when lastCommentBy is not provided", async () => {
 			await pruneGitHubNotifications({
 				filters: { reason: new Set(["subscribed"]) },
 			});
@@ -168,15 +168,15 @@ describe("pruneGitHubNotifications", () => {
 			).toHaveLength(0);
 		});
 
-		it("only unsubscribes from threads whose latest comment author matches when commentAuthor is provided", async () => {
+		it("only unsubscribes from threads whose latest comment author matches when lastCommentBy is provided", async () => {
 			mockRequest.mockImplementation((route: string) => {
 				if (route === "GET /notifications") {
 					return Promise.resolve(notificationsWithComments);
 				}
 
-				if (route in commentAuthors) {
+				if (route in lastCommentBys) {
 					return Promise.resolve({
-						data: { user: { login: commentAuthors[route] } },
+						data: { user: { login: lastCommentBys[route] } },
 					});
 				}
 
@@ -185,7 +185,7 @@ describe("pruneGitHubNotifications", () => {
 
 			const result = await pruneGitHubNotifications({
 				filters: {
-					commentAuthor: new Set(["codecov[bot]"]),
+					lastCommentBy: [/\[bot\]$/],
 					reason: new Set(["author"]),
 					title: [/PR/],
 				},

@@ -17,13 +17,13 @@ describe("formatFilters", () => {
 
 	it("includes comment authors when provided", () => {
 		const actual = formatFilters({
-			commentAuthor: new Set(["codecov[bot]"]),
+			lastCommentBy: [/^codecov/, /\[bot\]$/],
 			reason: new Set(["author"]),
 			title: [/.*/],
 		});
 
 		expect(actual).toMatchInlineSnapshot(`
-			"  commentAuthor: codecov[bot]
+			"  lastCommentBy: /^codecov/, /\\[bot\\]$/
 			  reason: author
 			  title: /.*/"
 		`);

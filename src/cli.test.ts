@@ -67,14 +67,19 @@ describe("pruneGitHubNotificationsCLI", () => {
 		});
 	});
 
-	it("passes commentAuthor to pruneGitHubNotifications when provided", async () => {
-		await pruneGitHubNotificationsCLI(["--commentAuthor", "codecov[bot]"]);
+	it("passes lastCommentBy to pruneGitHubNotifications when provided", async () => {
+		await pruneGitHubNotificationsCLI([
+			"--lastCommentBy",
+			"^codecov",
+			"--lastCommentBy",
+			"\\[bot\\]$",
+		]);
 
 		expect(mockPruneGitHubNotifications).toHaveBeenCalledWith({
 			bandwidth: undefined,
 			filters: {
 				...defaultOptions.filters,
-				commentAuthor: new Set(["codecov[bot]"]),
+				lastCommentBy: [/^codecov/, /\[bot\]$/],
 			},
 		});
 	});

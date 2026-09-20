@@ -1,8 +1,8 @@
 import { FilterOptions } from "./types.js";
 
-export function formatFilters({ commentAuthor, reason, title }: FilterOptions) {
+export function formatFilters({ lastCommentBy, reason, title }: FilterOptions) {
 	return [
-		commentAuthor && `  commentAuthor: ${[...commentAuthor].join(", ")}`,
+		lastCommentBy && `  lastCommentBy: ${lastCommentBy.map(String).join(", ")}`,
 		`  reason: ${[...reason].join(", ")}`,
 		`  title: ${title.map(String).join(", ")}`,
 	]
