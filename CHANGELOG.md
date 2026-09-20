@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.10.0](https://github.com/JoshuaKGoldberg/prune-github-notifications/compare/0.9.0...0.10.0) (2026-09-20)
+
+### Features
+
+- log resolved filters when no notifications match ([#752](https://github.com/JoshuaKGoldberg/prune-github-notifications/issues/752)) ([b286047](https://github.com/JoshuaKGoldberg/prune-github-notifications/commit/b286047d94651ec0d5944a74f1e69cd6d4d4efdd)), closes [#749](https://github.com/JoshuaKGoldberg/prune-github-notifications/issues/749)
+
 ## [0.9.0](https://github.com/JoshuaKGoldberg/prune-github-notifications/compare/0.8.0...0.9.0) (2026-09-20)
 
 ### Features
