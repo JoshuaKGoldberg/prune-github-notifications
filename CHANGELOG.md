@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.13.0](https://github.com/JoshuaKGoldberg/prune-github-notifications/compare/0.12.0...0.13.0) (2026-09-20)
+
+### Features
+
+- add createdBy filter for thread author ([#759](https://github.com/JoshuaKGoldberg/prune-github-notifications/issues/759)) ([f708c1b](https://github.com/JoshuaKGoldberg/prune-github-notifications/commit/f708c1b744378fe1f9a5d35b09d0cfad9b31f917)), closes [#19](https://github.com/JoshuaKGoldberg/prune-github-notifications/issues/19)
+
 ## [0.12.0](https://github.com/JoshuaKGoldberg/prune-github-notifications/compare/0.11.0...0.12.0) (2026-09-20)
 
 ### Features
