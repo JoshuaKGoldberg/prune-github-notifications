@@ -1,4 +1,4 @@
-import chalk from "chalk";
+import { styleText } from "node:util";
 
 import { formatFilters } from "./formatFilters.js";
 import { FilterOptions, PruneGitHubNotificationsResult } from "./types.js";
@@ -14,7 +14,7 @@ export async function runInWatch(
 
 	while (true) {
 		const { threads } = await action();
-		const time = chalk.gray(`[${new Date().toISOString()}]`);
+		const time = styleText("gray", `[${new Date().toISOString()}]`);
 
 		if (threads.length) {
 			console.log(
@@ -22,10 +22,10 @@ export async function runInWatch(
 				`Pruned ${threads.length.toString()} thread${threads.length === 1 ? "" : "s"}.`,
 			);
 		} else {
-			console.log(time, chalk.gray(`No threads found.`));
+			console.log(time, styleText("gray", `No threads found.`));
 
 			if (!loggedFilters) {
-				console.log(chalk.gray(formatFilters(filters)));
+				console.log(styleText("gray", formatFilters(filters)));
 				loggedFilters = true;
 			}
 		}

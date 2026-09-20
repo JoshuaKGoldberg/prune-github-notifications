@@ -1,4 +1,4 @@
-import chalk from "chalk";
+import { styleText } from "node:util";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { runInWatch } from "./runInWatch.js";
@@ -61,10 +61,10 @@ describe("runInWatch", () => {
 		);
 		expect(mockLog).toHaveBeenCalledWith(
 			expect.any(String),
-			chalk.gray("No threads found."),
+			styleText("gray", "No threads found."),
 		);
 		expect(mockLog).toHaveBeenCalledWith(
-			chalk.gray("  reason: subscribed\n  title: /chore/"),
+			styleText("gray", "  reason: subscribed\n  title: /chore/"),
 		);
 	});
 
@@ -76,7 +76,7 @@ describe("runInWatch", () => {
 		await Promise.resolve();
 
 		expect(mockLog).not.toHaveBeenCalledWith(
-			chalk.gray("  reason: subscribed\n  title: /chore/"),
+			styleText("gray", "  reason: subscribed\n  title: /chore/"),
 		);
 	});
 
@@ -120,12 +120,13 @@ describe("runInWatch", () => {
 		);
 		expect(mockLog).toHaveBeenCalledWith(
 			expect.any(String),
-			chalk.gray("No threads found."),
+			styleText("gray", "No threads found."),
 		);
 		expect(
 			mockLog.mock.calls.filter(
 				([message]) =>
-					message === chalk.gray("  reason: subscribed\n  title: /chore/"),
+					message ===
+					styleText("gray", "  reason: subscribed\n  title: /chore/"),
 			),
 		).toHaveLength(1);
 	});
