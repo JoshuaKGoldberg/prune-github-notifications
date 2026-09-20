@@ -1,4 +1,8 @@
 export interface FilterOptions {
+	/**
+	 * Usernames of latest comment authors to additionally filter to, if any.
+	 */
+	commentAuthor?: ReadonlySet<string>;
 	reason: ReadonlySet<string>;
 	title: RegExp[];
 }

@@ -1,0 +1,44 @@
+import { describe, expect, it, vi } from "vitest";
+
+import { getLatestCommentAuthor } from "./getLatestCommentAuthor.js";
+
+const mockRequest = vi.fn();
+
+const octokit = { request: mockRequest } as unknown as Parameters<
+	typeof getLatestCommentAuthor
+>[0];
+
+describe("getLatestCommentAuthor", () => {
+	it("returns undefined without requesting when the url is null", async () => {
+		const actual = await getLatestCommentAuthor(octokit, null);
+
+		expect(actual).toBeUndefined();
+		expect(mockRequest).not.toHaveBeenCalled();
+	});
+
+	it("returns the user login when the url resolves to a comment with a user", async () => {
+		mockRequest.mockResolvedValueOnce({ data: { user: { login: "someone" } } });
+
+		const actual = await getLatestCommentAuthor(
+			octokit,
+			"https://api.github.com/repos/a/b/issues/comments/1",
+		);
+
+		expect(actual).toBe("someone");
+		expect(mockRequest).toHaveBeenCalledWith(
+			"GET https://api.github.com/repos/a/b/issues/comments/1",
+			{ headers: { "X-GitHub-Api-Version": "2022-11-28" } },
+		);
+	});
+
+	it("returns undefined when the url resolves to data without a user", async () => {
+		mockRequest.mockResolvedValueOnce({ data: { user: null } });
+
+		const actual = await getLatestCommentAuthor(
+			octokit,
+			"https://api.github.com/repos/a/b/issues/1",
+		);
+
+		expect(actual).toBeUndefined();
+	});
+});

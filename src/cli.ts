@@ -12,12 +12,13 @@ prune-github-notifications
 Prunes GitHub notifications you don't care about, such as automated dependency bumps. 🧹
 
 Options:
-  --auth       GitHub auth token (default: process.env.GH_TOKEN or 'gh auth token')
-  --bandwidth  Maximum parallel requests to start at once (default: 6)
-  --reason     Notification reason(s) to filter to (default: "subscribed")
-  --title      Notification title regular expression(s) to filter to (default: dependency updates)
-  --watch      Seconds interval to continuously re-run on, if truthy (default: 0)
-  --help       Show this help message
+  --auth           GitHub auth token (default: process.env.GH_TOKEN or 'gh auth token')
+  --bandwidth      Maximum parallel requests to start at once (default: 6)
+  --commentAuthor  Latest comment author username(s) to additionally filter to
+  --reason         Notification reason(s) to filter to (default: "subscribed")
+  --title          Notification title regular expression(s) to filter to (default: dependency updates)
+  --watch          Seconds interval to continuously re-run on, if truthy (default: 0)
+  --help           Show this help message
 
 Examples:
   npx prune-github-notifications
@@ -27,6 +28,10 @@ Examples:
 
 const schema = z.object({
 	bandwidth: z.coerce.number().optional(),
+	commentAuthor: z
+		.array(z.string())
+		.optional()
+		.transform((value) => value && new Set(value)),
 	reason: z
 		.array(z.string())
 		.optional()
@@ -47,6 +52,10 @@ export async function pruneGitHubNotificationsCLI(args: string[]) {
 				type: "string",
 			},
 			bandwidth: {
+				type: "string",
+			},
+			commentAuthor: {
+				multiple: true,
 				type: "string",
 			},
 			help: {
@@ -72,8 +81,9 @@ export async function pruneGitHubNotificationsCLI(args: string[]) {
 		return;
 	}
 
-	const { bandwidth, reason, title, watch } = schema.parse(values);
-	const filters = resolveFilters({ reason, title });
+	const { bandwidth, commentAuthor, reason, title, watch } =
+		schema.parse(values);
+	const filters = resolveFilters({ commentAuthor, reason, title });
 
 	const action = async () =>
 		await pruneGitHubNotifications({ bandwidth, filters });

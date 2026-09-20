@@ -5,6 +5,7 @@ export function resolveFilters(
 	filters?: Partial<FilterOptions>,
 ): FilterOptions {
 	return {
+		commentAuthor: filters?.commentAuthor,
 		reason: filters?.reason ?? defaultOptions.filters.reason,
 		title: filters?.title ?? defaultOptions.filters.title,
 	};

@@ -1,7 +1,9 @@
 import { octokitFromAuth } from "octokit-from-auth";
 import throttledQueue from "throttled-queue";
 
+import { createCommentAuthorFilter } from "./createCommentAuthorFilter.js";
 import { createThreadFilter } from "./createThreadFilter.js";
+import { getLatestCommentAuthor } from "./getLatestCommentAuthor.js";
 import { defaultOptions } from "./options.js";
 import { resolveFilters } from "./resolveFilters.js";
 import {
@@ -27,7 +29,9 @@ export async function pruneGitHubNotifications({
 			"X-GitHub-Api-Version": "2022-11-28",
 		},
 	});
-	const threadFilter = createThreadFilter(resolveFilters(filters));
+	const resolvedFilters = resolveFilters(filters);
+	const threadFilter = createThreadFilter(resolvedFilters);
+	const commentAuthorFilter = createCommentAuthorFilter(resolvedFilters);
 
 	// TODO: Why is the type not being friendly?
 	const throttle = (throttledQueue as unknown as ThrottledQueue)(
@@ -36,9 +40,24 @@ export async function pruneGitHubNotifications({
 		1000,
 	);
 
-	const threads = notifications.data
-		.filter(threadFilter)
-		.map((thread) => Number(thread.id));
+	let matchingThreads = notifications.data.filter(threadFilter);
+
+	// Comment authors take a request per thread, so only look them up if needed
+	if (commentAuthorFilter) {
+		const authors = await Promise.all(
+			matchingThreads.map((thread) =>
+				throttle(() =>
+					getLatestCommentAuthor(octokit, thread.subject.latest_comment_url),
+				),
+			),
+		);
+
+		matchingThreads = matchingThreads.filter((_, i) =>
+			commentAuthorFilter(authors[i]),
+		);
+	}
+
+	const threads = matchingThreads.map((thread) => Number(thread.id));
 
 	await Promise.all(
 		threads.map(async (thread) => {

@@ -67,6 +67,18 @@ describe("pruneGitHubNotificationsCLI", () => {
 		});
 	});
 
+	it("passes commentAuthor to pruneGitHubNotifications when provided", async () => {
+		await pruneGitHubNotificationsCLI(["--commentAuthor", "codecov[bot]"]);
+
+		expect(mockPruneGitHubNotifications).toHaveBeenCalledWith({
+			bandwidth: undefined,
+			filters: {
+				...defaultOptions.filters,
+				commentAuthor: new Set(["codecov[bot]"]),
+			},
+		});
+	});
+
 	it("does not log when notifications were pruned and watch mode is not enabled", async () => {
 		mockPruneGitHubNotifications.mockResolvedValueOnce({ threads: [123] });
 

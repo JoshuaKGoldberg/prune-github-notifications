@@ -1,8 +1,11 @@
 import { FilterOptions } from "./types.js";
 
-export function formatFilters({ reason, title }: FilterOptions) {
+export function formatFilters({ commentAuthor, reason, title }: FilterOptions) {
 	return [
+		commentAuthor && `  commentAuthor: ${[...commentAuthor].join(", ")}`,
 		`  reason: ${[...reason].join(", ")}`,
 		`  title: ${title.map(String).join(", ")}`,
-	].join("\n");
+	]
+		.filter(Boolean)
+		.join("\n");
 }
