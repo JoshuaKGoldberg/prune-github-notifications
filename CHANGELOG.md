@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.11.0](https://github.com/JoshuaKGoldberg/prune-github-notifications/compare/0.10.0...0.11.0) (2026-09-20)
+
+### Features
+
+- log processing details with the debug module ([#756](https://github.com/JoshuaKGoldberg/prune-github-notifications/issues/756)) ([4cd27f8](https://github.com/JoshuaKGoldberg/prune-github-notifications/commit/4cd27f89f850070da250682736c728226fac2e7b)), closes [#753](https://github.com/JoshuaKGoldberg/prune-github-notifications/issues/753)
+
 ## [0.10.0](https://github.com/JoshuaKGoldberg/prune-github-notifications/compare/0.9.0...0.10.0) (2026-09-20)
 
 ### Features

@@ -77,6 +77,14 @@ Running in watch mode to clear notifications every ten seconds:
 npx prune-github-notifications --watch 10
 ```
 
+#### Debug Logging
+
+Set the `DEBUG` environment variable to `prune-github-notifications` to log details such as how many notifications were fetched, how many matched the filters, and which threads are being pruned:
+
+```shell
+DEBUG=prune-github-notifications npx prune-github-notifications
+```
+
 ### Node.js API
 
 ```shell
