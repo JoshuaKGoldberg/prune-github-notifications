@@ -51,6 +51,30 @@ describe("createThreadFilter", () => {
 		expect(actual).toBe(true);
 	});
 
+	it("allows a thread with any reason when reasons include 'any'", () => {
+		const filter = createThreadFilter({
+			reason: new Set(["any"]),
+			title: [/chore/],
+		});
+		const thread = { reason: "review_requested", subject: { title: "chore" } };
+
+		const actual = filter(thread);
+
+		expect(actual).toBe(true);
+	});
+
+	it("filters out a thread when its title does not match and reasons include 'any'", () => {
+		const filter = createThreadFilter({
+			reason: new Set(["any"]),
+			title: [/chore/],
+		});
+		const thread = { reason: "review_requested", subject: { title: "feat" } };
+
+		const actual = filter(thread);
+
+		expect(actual).toBe(false);
+	});
+
 	test("common defaults", () => {
 		const filter = createThreadFilter({
 			reason: new Set(["subscribed"]),
