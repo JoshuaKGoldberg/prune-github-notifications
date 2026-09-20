@@ -55,7 +55,6 @@ export async function pruneGitHubNotificationsCLI(args: string[]) {
 		args,
 		options: {
 			auth: {
-				default: process.env.GH_TOKEN,
 				type: "string",
 			},
 			bandwidth: {
@@ -92,6 +91,7 @@ export async function pruneGitHubNotificationsCLI(args: string[]) {
 		return;
 	}
 
+	const { auth } = values;
 	const { bandwidth, createdBy, lastCommentBy, reason, title, watch } =
 		schema.parse(values);
 	const filters = resolveFilters({
@@ -102,7 +102,7 @@ export async function pruneGitHubNotificationsCLI(args: string[]) {
 	});
 
 	const action = async () =>
-		await pruneGitHubNotifications({ bandwidth, filters });
+		await pruneGitHubNotifications({ auth, bandwidth, filters });
 
 	if (watch) {
 		await runInWatch(action, watch, filters);
