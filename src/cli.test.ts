@@ -21,6 +21,16 @@ vi.mock("./runInWatch.js", () => ({
 }));
 
 describe("pruneGitHubNotificationsCLI", () => {
+	it("logs help text without running when --help is provided", async () => {
+		const log = vi.spyOn(console, "log").mockImplementation(() => undefined);
+
+		await pruneGitHubNotificationsCLI(["--help"]);
+
+		expect(log).toHaveBeenCalledWith(expect.stringContaining("--watch"));
+		expect(mockPruneGitHubNotifications).not.toHaveBeenCalled();
+		expect(mockRunInWatch).not.toHaveBeenCalled();
+	});
+
 	it("passes parsed arguments to pruneGitHubNotifications when they're valid and watch mode is not enabled", async () => {
 		await pruneGitHubNotificationsCLI([
 			"--bandwidth",
