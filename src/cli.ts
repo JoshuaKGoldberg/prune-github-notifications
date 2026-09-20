@@ -15,6 +15,7 @@ Options:
   --auth           GitHub auth token (default: process.env.GH_TOKEN or 'gh auth token')
   --bandwidth      Maximum parallel requests to start at once (default: 6)
   --createdBy      Thread author regular expression(s) to additionally filter to
+  --label          Issue or PR label regular expression(s) to additionally filter to
   --lastCommentBy  Latest comment author regular expression(s) to additionally filter to
   --reason         Notification reason(s) to filter to (default: "subscribed")
   --title          Notification title regular expression(s) to filter to (default: dependency updates)
@@ -25,6 +26,7 @@ Examples:
   npx prune-github-notifications
   npx prune-github-notifications --reason subscribed --title "^chore.+ update .+ to"
   npx prune-github-notifications --reason any --createdBy "^renovate\\[bot\\]$"
+  npx prune-github-notifications --reason any --title ".*" --label "^dependencies$"
   npx prune-github-notifications --reason author --title ".*" --lastCommentBy "\\[bot\\]$"
   npx prune-github-notifications --watch 10
 `;
@@ -32,6 +34,10 @@ Examples:
 const schema = z.object({
 	bandwidth: z.coerce.number().optional(),
 	createdBy: z
+		.array(z.string())
+		.transform((values) => values.map((value) => new RegExp(value)))
+		.optional(),
+	label: z
 		.array(z.string())
 		.transform((values) => values.map((value) => new RegExp(value)))
 		.optional(),
@@ -68,6 +74,10 @@ export async function pruneGitHubNotificationsCLI(args: string[]) {
 			help: {
 				type: "boolean",
 			},
+			label: {
+				multiple: true,
+				type: "string",
+			},
 			lastCommentBy: {
 				multiple: true,
 				type: "string",
@@ -92,10 +102,11 @@ export async function pruneGitHubNotificationsCLI(args: string[]) {
 		return;
 	}
 
-	const { bandwidth, createdBy, lastCommentBy, reason, title, watch } =
+	const { bandwidth, createdBy, label, lastCommentBy, reason, title, watch } =
 		schema.parse(values);
 	const filters = resolveFilters({
 		createdBy,
+		label,
 		lastCommentBy,
 		reason,
 		title,

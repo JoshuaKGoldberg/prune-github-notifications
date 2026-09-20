@@ -2,9 +2,10 @@ import debug from "debug";
 import { octokitFromAuth } from "octokit-from-auth";
 import throttledQueue from "throttled-queue";
 
-import { AuthorFilter, createAuthorFilter } from "./createAuthorFilter.js";
+import { createAuthorFilter } from "./createAuthorFilter.js";
+import { createLabelFilter } from "./createLabelFilter.js";
 import { createThreadFilter } from "./createThreadFilter.js";
-import { getAuthorLogin } from "./getAuthorLogin.js";
+import { getUrlDetails, UrlDetailsFilter } from "./getUrlDetails.js";
 import { defaultOptions } from "./options.js";
 import { resolveFilters } from "./resolveFilters.js";
 import {
@@ -44,32 +45,41 @@ export async function pruneGitHubNotifications({
 		1000,
 	);
 
-	// Author logins take a request per thread, so only look them up if needed
-	const filterByAuthor = async <Thread>(
+	// URL details take a request per thread, so only look them up if needed
+	const filterByUrlDetails = async <Thread>(
 		threads: Thread[],
-		authorFilter: AuthorFilter | undefined,
+		detailsFilters: (undefined | UrlDetailsFilter)[],
 		getUrl: (thread: Thread) => null | string | undefined,
 	) => {
-		if (!authorFilter) {
+		const definedFilters = detailsFilters.filter(
+			(detailsFilter) => detailsFilter !== undefined,
+		);
+		if (!definedFilters.length) {
 			return threads;
 		}
 
-		const authors = await Promise.all(
+		const details = await Promise.all(
 			threads.map((thread) =>
-				throttle(() => getAuthorLogin(octokit, getUrl(thread))),
+				throttle(() => getUrlDetails(octokit, getUrl(thread))),
 			),
 		);
 
-		return threads.filter((_, i) => authorFilter(authors[i]));
+		return threads.filter((_, i) =>
+			definedFilters.every((detailsFilter) => detailsFilter(details[i])),
+		);
 	};
 
-	const matchingThreads = await filterByAuthor(
-		await filterByAuthor(
+	// Both createdBy and label read from the subject URL, so they share a lookup
+	const matchingThreads = await filterByUrlDetails(
+		await filterByUrlDetails(
 			notifications.data.filter(threadFilter),
-			createAuthorFilter(resolvedFilters.createdBy),
+			[
+				createAuthorFilter(resolvedFilters.createdBy),
+				createLabelFilter(resolvedFilters.label),
+			],
 			(thread) => thread.subject.url,
 		),
-		createAuthorFilter(resolvedFilters.lastCommentBy),
+		[createAuthorFilter(resolvedFilters.lastCommentBy)],
 		(thread) => thread.subject.latest_comment_url,
 	);
 

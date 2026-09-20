@@ -35,6 +35,7 @@ npx prune-github-notifications
 | `--auth`          | `string`   | `process.env.GH_TOKEN` or executing `gh auth token`                                 | Auth token for GitHub from [`octokit-from-auth`](https://github.com/JoshuaKGoldberg/octokit-from-auth). |
 | `--bandwidth`     | `number`   | `6`                                                                                 | Maximum parallel requests to start at once.                                                             |
 | `--createdBy`     | `string[]` | -                                                                                   | Thread author regular expressions to additionally filter to.                                            |
+| `--label`         | `string[]` | -                                                                                   | Issue or pull request label regular expressions to additionally filter to.                              |
 | `--lastCommentBy` | `string[]` | -                                                                                   | Latest comment author regular expressions to additionally filter to.                                    |
 | `--help`          | `boolean`  | `false`                                                                             | Prints a usage message and exits.                                                                       |
 | `--reason`        | `string[]` | `["subscribed"]`                                                                    | Notification reason(s) to filter to, or `any` to match all reasons.                                     |
@@ -57,6 +58,12 @@ Pruning threads created by a specific bot, regardless of title:
 
 ```shell
 npx prune-github-notifications --reason any --title ".*" --createdBy "^renovate\[bot\]$"
+```
+
+Pruning threads whose issue or pull request has a specific label, regardless of title:
+
+```shell
+npx prune-github-notifications --reason any --title ".*" --label "^dependencies$"
 ```
 
 Pruning your own threads (`author` reason) whose latest comment is from a specific account:
@@ -110,13 +117,15 @@ await pruneGitHubNotifications();
 
 Only `auth` is required, and only if a `GH_TOKEN` isn't available.
 
-| Option          | Type          | Default                                                              | Description                                                          |
-| --------------- | ------------- | -------------------------------------------------------------------- | -------------------------------------------------------------------- |
-| `auth`          | `string`      | `process.env.GH_TOKEN`                                               | GitHub authentication token with _notifications_ access.             |
-| `bandwidth`     | `number`      | `6`                                                                  | Maximum parallel requests to start at once.                          |
-| `lastCommentBy` | `RegExp[]`    | -                                                                    | Latest comment author regular expressions to additionally filter to. |
-| `reason`        | `Set<string>` | `Set {"subscribed"}`                                                 | Notification reason(s) to filter to, or `any` to match all reasons.  |
-| `title`         | `RegExp[]`    | `[/^chore\(deps\): update .+ to/, /^build\(deps-dev\): bump .+ to/]` | Notification title regular expressions to filter to.                 |
+| Option          | Type          | Default                                                              | Description                                                                |
+| --------------- | ------------- | -------------------------------------------------------------------- | -------------------------------------------------------------------------- |
+| `auth`          | `string`      | `process.env.GH_TOKEN`                                               | GitHub authentication token with _notifications_ access.                   |
+| `bandwidth`     | `number`      | `6`                                                                  | Maximum parallel requests to start at once.                                |
+| `createdBy`     | `RegExp[]`    | -                                                                    | Thread author regular expressions to additionally filter to.               |
+| `label`         | `RegExp[]`    | -                                                                    | Issue or pull request label regular expressions to additionally filter to. |
+| `lastCommentBy` | `RegExp[]`    | -                                                                    | Latest comment author regular expressions to additionally filter to.       |
+| `reason`        | `Set<string>` | `Set {"subscribed"}`                                                 | Notification reason(s) to filter to, or `any` to match all reasons.        |
+| `title`         | `RegExp[]`    | `[/^chore\(deps\): update .+ to/, /^build\(deps-dev\): bump .+ to/]` | Notification title regular expressions to filter to.                       |
 
 For example, providing all options to the Node.js API:
 
