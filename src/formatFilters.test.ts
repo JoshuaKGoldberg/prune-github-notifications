@@ -14,4 +14,18 @@ describe("formatFilters", () => {
 			  title: /^chore\\(deps\\)/, /lock file maintenance/"
 		`);
 	});
+
+	it("includes comment authors when provided", () => {
+		const actual = formatFilters({
+			lastCommentBy: [/^codecov/, /\[bot\]$/],
+			reason: new Set(["author"]),
+			title: [/.*/],
+		});
+
+		expect(actual).toMatchInlineSnapshot(`
+			"  lastCommentBy: /^codecov/, /\\[bot\\]$/
+			  reason: author
+			  title: /.*/"
+		`);
+	});
 });

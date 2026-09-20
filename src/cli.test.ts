@@ -67,6 +67,23 @@ describe("pruneGitHubNotificationsCLI", () => {
 		});
 	});
 
+	it("passes lastCommentBy to pruneGitHubNotifications when provided", async () => {
+		await pruneGitHubNotificationsCLI([
+			"--lastCommentBy",
+			"^codecov",
+			"--lastCommentBy",
+			"\\[bot\\]$",
+		]);
+
+		expect(mockPruneGitHubNotifications).toHaveBeenCalledWith({
+			bandwidth: undefined,
+			filters: {
+				...defaultOptions.filters,
+				lastCommentBy: [/^codecov/, /\[bot\]$/],
+			},
+		});
+	});
+
 	it("does not log when notifications were pruned and watch mode is not enabled", async () => {
 		mockPruneGitHubNotifications.mockResolvedValueOnce({ threads: [123] });
 

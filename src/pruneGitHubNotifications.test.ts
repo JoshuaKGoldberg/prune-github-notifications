@@ -1,8 +1,8 @@
-import { describe, expect, it, vi } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 
 import { pruneGitHubNotifications } from "./pruneGitHubNotifications.js";
 
-const mockRequest = vi.fn().mockResolvedValue({
+const defaultNotifications = {
 	data: [
 		{
 			id: "12",
@@ -33,7 +33,9 @@ const mockRequest = vi.fn().mockResolvedValue({
 			},
 		},
 	],
-});
+};
+
+const mockRequest = vi.fn().mockResolvedValue(defaultNotifications);
 
 vi.mock("octokit-from-auth", () => ({
 	octokitFromAuth: () =>
@@ -113,5 +115,109 @@ describe("pruneGitHubNotifications", () => {
 			  ],
 			]
 		`);
+	});
+
+	describe("lastCommentBy", () => {
+		const notificationsWithComments = {
+			data: [
+				{
+					id: "12",
+					reason: "author",
+					subject: {
+						latest_comment_url: "https://api.github.com/comments/1",
+						title: "PR by a bot",
+					},
+				},
+				{
+					id: "34",
+					reason: "author",
+					subject: {
+						latest_comment_url: "https://api.github.com/comments/2",
+						title: "PR by a human",
+					},
+				},
+				{
+					id: "56",
+					reason: "author",
+					subject: {
+						latest_comment_url: null,
+						title: "PR with no comments",
+					},
+				},
+			],
+		};
+
+		const lastCommentBys: Record<string, string> = {
+			"GET https://api.github.com/comments/1": "codecov[bot]",
+			"GET https://api.github.com/comments/2": "human",
+		};
+
+		afterEach(() => {
+			mockRequest.mockReset().mockResolvedValue(defaultNotifications);
+		});
+
+		it("does not request comment data when lastCommentBy is not provided", async () => {
+			await pruneGitHubNotifications({
+				filters: { reason: new Set(["subscribed"]) },
+			});
+
+			expect(
+				mockRequest.mock.calls.filter(([route]) =>
+					(route as string).startsWith("GET https://"),
+				),
+			).toHaveLength(0);
+		});
+
+		it("only unsubscribes from threads whose latest comment author matches when lastCommentBy is provided", async () => {
+			mockRequest.mockImplementation((route: string) => {
+				if (route === "GET /notifications") {
+					return Promise.resolve(notificationsWithComments);
+				}
+
+				if (route in lastCommentBys) {
+					return Promise.resolve({
+						data: { user: { login: lastCommentBys[route] } },
+					});
+				}
+
+				return Promise.resolve({});
+			});
+
+			const result = await pruneGitHubNotifications({
+				filters: {
+					lastCommentBy: [/\[bot\]$/],
+					reason: new Set(["author"]),
+					title: [/PR/],
+				},
+			});
+
+			expect(result.threads).toEqual([12]);
+			expect(
+				mockRequest.mock.calls.filter(([route]) =>
+					(route as string).startsWith("DELETE"),
+				),
+			).toMatchInlineSnapshot(`
+				[
+				  [
+				    "DELETE /notifications/threads/{thread_id}",
+				    {
+				      "headers": {
+				        "X-GitHub-Api-Version": "2022-11-28",
+				      },
+				      "thread_id": 12,
+				    },
+				  ],
+				  [
+				    "DELETE /notifications/threads/{thread_id}/subscription",
+				    {
+				      "headers": {
+				        "X-GitHub-Api-Version": "2022-11-28",
+				      },
+				      "thread_id": 12,
+				    },
+				  ],
+				]
+			`);
+		});
 	});
 });
