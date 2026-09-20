@@ -15,15 +15,17 @@ describe("formatFilters", () => {
 		`);
 	});
 
-	it("includes comment authors when provided", () => {
+	it("includes author filters when provided", () => {
 		const actual = formatFilters({
+			createdBy: [/^renovate/],
 			lastCommentBy: [/^codecov/, /\[bot\]$/],
 			reason: new Set(["author"]),
 			title: [/.*/],
 		});
 
 		expect(actual).toMatchInlineSnapshot(`
-			"  lastCommentBy: /^codecov/, /\\[bot\\]$/
+			"  createdBy: /^renovate/
+			  lastCommentBy: /^codecov/, /\\[bot\\]$/
 			  reason: author
 			  title: /.*/"
 		`);

@@ -1,8 +1,14 @@
 export interface FilterOptions {
 	/**
+	 * Thread author username regular expressions to additionally filter to, if any.
+	 */
+	createdBy?: RegExp[];
+
+	/**
 	 * Latest comment author username regular expressions to additionally filter to, if any.
 	 */
 	lastCommentBy?: RegExp[];
+
 	reason: ReadonlySet<string>;
 	title: RegExp[];
 }

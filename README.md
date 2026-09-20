@@ -34,6 +34,7 @@ npx prune-github-notifications
 | ----------------- | ---------- | ----------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- |
 | `--auth`          | `string`   | `process.env.GH_TOKEN` or executing `gh auth token`                                 | Auth token for GitHub from [`octokit-from-auth`](https://github.com/JoshuaKGoldberg/octokit-from-auth). |
 | `--bandwidth`     | `number`   | `6`                                                                                 | Maximum parallel requests to start at once.                                                             |
+| `--createdBy`     | `string[]` | -                                                                                   | Thread author regular expressions to additionally filter to.                                            |
 | `--lastCommentBy` | `string[]` | -                                                                                   | Latest comment author regular expressions to additionally filter to.                                    |
 | `--help`          | `boolean`  | `false`                                                                             | Prints a usage message and exits.                                                                       |
 | `--reason`        | `string[]` | `["subscribed"]`                                                                    | Notification reason(s) to filter to, or `any` to match all reasons.                                     |
@@ -50,6 +51,12 @@ Pruning matching titles regardless of notification reason (e.g. `review_requeste
 
 ```shell
 npx prune-github-notifications --reason any
+```
+
+Pruning threads created by a specific bot, regardless of title:
+
+```shell
+npx prune-github-notifications --reason any --title ".*" --createdBy "^renovate\[bot\]$"
 ```
 
 Pruning your own threads (`author` reason) whose latest comment is from a specific account:

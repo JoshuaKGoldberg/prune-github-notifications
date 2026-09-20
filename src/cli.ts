@@ -14,6 +14,7 @@ Prunes GitHub notifications you don't care about, such as automated dependency b
 Options:
   --auth           GitHub auth token (default: process.env.GH_TOKEN or 'gh auth token')
   --bandwidth      Maximum parallel requests to start at once (default: 6)
+  --createdBy      Thread author regular expression(s) to additionally filter to
   --lastCommentBy  Latest comment author regular expression(s) to additionally filter to
   --reason         Notification reason(s) to filter to (default: "subscribed")
   --title          Notification title regular expression(s) to filter to (default: dependency updates)
@@ -23,12 +24,17 @@ Options:
 Examples:
   npx prune-github-notifications
   npx prune-github-notifications --reason subscribed --title "^chore.+ update .+ to"
+  npx prune-github-notifications --reason any --createdBy "^renovate\\[bot\\]$"
   npx prune-github-notifications --reason author --title ".*" --lastCommentBy "\\[bot\\]$"
   npx prune-github-notifications --watch 10
 `;
 
 const schema = z.object({
 	bandwidth: z.coerce.number().optional(),
+	createdBy: z
+		.array(z.string())
+		.transform((values) => values.map((value) => new RegExp(value)))
+		.optional(),
 	lastCommentBy: z
 		.array(z.string())
 		.transform((values) => values.map((value) => new RegExp(value)))
@@ -53,6 +59,10 @@ export async function pruneGitHubNotificationsCLI(args: string[]) {
 				type: "string",
 			},
 			bandwidth: {
+				type: "string",
+			},
+			createdBy: {
+				multiple: true,
 				type: "string",
 			},
 			help: {
@@ -82,9 +92,14 @@ export async function pruneGitHubNotificationsCLI(args: string[]) {
 		return;
 	}
 
-	const { bandwidth, lastCommentBy, reason, title, watch } =
+	const { bandwidth, createdBy, lastCommentBy, reason, title, watch } =
 		schema.parse(values);
-	const filters = resolveFilters({ lastCommentBy, reason, title });
+	const filters = resolveFilters({
+		createdBy,
+		lastCommentBy,
+		reason,
+		title,
+	});
 
 	const action = async () =>
 		await pruneGitHubNotifications({ bandwidth, filters });
