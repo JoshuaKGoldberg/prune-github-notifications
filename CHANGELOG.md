@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.12.0](https://github.com/JoshuaKGoldberg/prune-github-notifications/compare/0.11.0...0.12.0) (2026-09-20)
+
+### Features
+
+- add lastCommentBy filter for latest comment author ([#757](https://github.com/JoshuaKGoldberg/prune-github-notifications/issues/757)) ([2f9c5ca](https://github.com/JoshuaKGoldberg/prune-github-notifications/commit/2f9c5ca89cfa5f58dcf191a68a54eb19983a22a6)), closes [#754](https://github.com/JoshuaKGoldberg/prune-github-notifications/issues/754) [#755](https://github.com/JoshuaKGoldberg/prune-github-notifications/issues/755), references [#754](https://github.com/JoshuaKGoldberg/prune-github-notifications/issues/754) [#755](https://github.com/JoshuaKGoldberg/prune-github-notifications/issues/755) [#758](https://github.com/JoshuaKGoldberg/prune-github-notifications/issues/758)
+
 ## [0.11.0](https://github.com/JoshuaKGoldberg/prune-github-notifications/compare/0.10.0...0.11.0) (2026-09-20)
 
 ### Features
