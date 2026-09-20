@@ -6,6 +6,11 @@ import { runInWatch } from "./runInWatch.js";
 const mockLog = vi.fn();
 const mockSetTimeout = vi.fn();
 
+const filters = {
+	reason: new Set(["subscribed"]),
+	title: [/chore/],
+};
+
 describe("runInWatch", () => {
 	beforeEach(() => {
 		console.log = mockLog;
@@ -16,7 +21,7 @@ describe("runInWatch", () => {
 		const action = () => Promise.resolve({ threads: [111] });
 
 		// eslint-disable-next-line @typescript-eslint/no-floating-promises
-		runInWatch(action, 1);
+		runInWatch(action, 1, filters);
 		await Promise.resolve();
 
 		expect(mockLog).toHaveBeenCalledWith(
@@ -32,7 +37,7 @@ describe("runInWatch", () => {
 		const action = () => Promise.resolve({ threads: [111, 222] });
 
 		// eslint-disable-next-line @typescript-eslint/no-floating-promises
-		runInWatch(action, 1);
+		runInWatch(action, 1, filters);
 		await Promise.resolve();
 
 		expect(mockLog).toHaveBeenCalledWith(
@@ -44,11 +49,11 @@ describe("runInWatch", () => {
 		);
 	});
 
-	it("logs a zero thread count when the action returns no threads", async () => {
+	it("logs a zero thread count and the filters when the action returns no threads", async () => {
 		const action = () => Promise.resolve({ threads: [] });
 
 		// eslint-disable-next-line @typescript-eslint/no-floating-promises
-		runInWatch(action, 1);
+		runInWatch(action, 1, filters);
 		await Promise.resolve();
 
 		expect(mockLog).toHaveBeenCalledWith(
@@ -57,6 +62,21 @@ describe("runInWatch", () => {
 		expect(mockLog).toHaveBeenCalledWith(
 			expect.any(String),
 			chalk.gray("No threads found."),
+		);
+		expect(mockLog).toHaveBeenCalledWith(
+			chalk.gray("  reason: subscribed\n  title: /chore/"),
+		);
+	});
+
+	it("does not log the filters when the action returns threads", async () => {
+		const action = () => Promise.resolve({ threads: [111] });
+
+		// eslint-disable-next-line @typescript-eslint/no-floating-promises
+		runInWatch(action, 1, filters);
+		await Promise.resolve();
+
+		expect(mockLog).not.toHaveBeenCalledWith(
+			chalk.gray("  reason: subscribed\n  title: /chore/"),
 		);
 	});
 
@@ -84,7 +104,7 @@ describe("runInWatch", () => {
 		});
 
 		// eslint-disable-next-line @typescript-eslint/no-floating-promises
-		runInWatch(action, 1);
+		runInWatch(action, 1, filters);
 		await promise;
 
 		expect(mockLog).toHaveBeenCalledWith(
@@ -102,6 +122,12 @@ describe("runInWatch", () => {
 			expect.any(String),
 			chalk.gray("No threads found."),
 		);
+		expect(
+			mockLog.mock.calls.filter(
+				([message]) =>
+					message === chalk.gray("  reason: subscribed\n  title: /chore/"),
+			),
+		).toHaveLength(1);
 	});
 });
 

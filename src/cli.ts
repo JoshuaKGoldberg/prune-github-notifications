@@ -1,7 +1,9 @@
 import { parseArgs } from "node:util";
 import * as z from "zod";
 
+import { formatFilters } from "./formatFilters.js";
 import { pruneGitHubNotifications } from "./pruneGitHubNotifications.js";
+import { resolveFilters } from "./resolveFilters.js";
 import { runInWatch } from "./runInWatch.js";
 
 const helpText = `
@@ -71,15 +73,21 @@ export async function pruneGitHubNotificationsCLI(args: string[]) {
 	}
 
 	const { bandwidth, reason, title, watch } = schema.parse(values);
+	const filters = resolveFilters({ reason, title });
 
 	const action = async () =>
-		await pruneGitHubNotifications({
-			bandwidth,
-			filters: {
-				reason,
-				title,
-			},
-		});
+		await pruneGitHubNotifications({ bandwidth, filters });
 
-	await (watch ? runInWatch(action, watch) : action());
+	if (watch) {
+		await runInWatch(action, watch, filters);
+		return;
+	}
+
+	const { threads } = await action();
+
+	if (!threads.length) {
+		console.log(
+			`No notifications matched the filters:\n${formatFilters(filters)}`,
+		);
+	}
 }
