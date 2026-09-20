@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.13.1](https://github.com/JoshuaKGoldberg/prune-github-notifications/compare/0.13.0...0.13.1) (2026-09-20)
+
+### Bug Fixes
+
+- retry watch mode runs, exiting after three consecutive failures ([#760](https://github.com/JoshuaKGoldberg/prune-github-notifications/issues/760)) ([9193f96](https://github.com/JoshuaKGoldberg/prune-github-notifications/commit/9193f96ff05ffe6e1ab2f7809920180065776ccf)), closes [#180](https://github.com/JoshuaKGoldberg/prune-github-notifications/issues/180), references [#180](https://github.com/JoshuaKGoldberg/prune-github-notifications/issues/180)
+
 ## [0.13.0](https://github.com/JoshuaKGoldberg/prune-github-notifications/compare/0.12.0...0.13.0) (2026-09-20)
 
 ### Features
