@@ -3,6 +3,7 @@ import throttledQueue from "throttled-queue";
 
 import { createThreadFilter } from "./createThreadFilter.js";
 import { defaultOptions } from "./options.js";
+import { resolveFilters } from "./resolveFilters.js";
 import {
 	PruneGitHubNotificationsOptions,
 	PruneGitHubNotificationsResult,
@@ -26,10 +27,7 @@ export async function pruneGitHubNotifications({
 			"X-GitHub-Api-Version": "2022-11-28",
 		},
 	});
-	const threadFilter = createThreadFilter({
-		reason: filters?.reason ?? defaultOptions.filters.reason,
-		title: filters?.title ?? defaultOptions.filters.title,
-	});
+	const threadFilter = createThreadFilter(resolveFilters(filters));
 
 	// TODO: Why is the type not being friendly?
 	const throttle = (throttledQueue as unknown as ThrottledQueue)(

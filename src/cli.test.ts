@@ -1,8 +1,9 @@
-import { describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { pruneGitHubNotificationsCLI } from "./cli.js";
+import { defaultOptions } from "./options.js";
 
-const mockPruneGitHubNotifications = vi.fn();
+const mockPruneGitHubNotifications = vi.fn().mockResolvedValue({ threads: [] });
 
 vi.mock("./pruneGitHubNotifications.js", () => ({
 	get pruneGitHubNotifications() {
@@ -21,6 +22,10 @@ vi.mock("./runInWatch.js", () => ({
 }));
 
 describe("pruneGitHubNotificationsCLI", () => {
+	beforeEach(() => {
+		vi.spyOn(console, "log").mockImplementation(() => undefined);
+	});
+
 	it("passes parsed arguments to pruneGitHubNotifications when they're valid and watch mode is not enabled", async () => {
 		await pruneGitHubNotificationsCLI([
 			"--bandwidth",
@@ -41,6 +46,37 @@ describe("pruneGitHubNotificationsCLI", () => {
 			},
 		});
 		expect(mockRunInWatch).not.toHaveBeenCalled();
+	});
+
+	it("passes default filters to pruneGitHubNotifications when none are provided", async () => {
+		await pruneGitHubNotificationsCLI([]);
+
+		expect(mockPruneGitHubNotifications).toHaveBeenCalledWith({
+			bandwidth: undefined,
+			filters: defaultOptions.filters,
+		});
+	});
+
+	it("does not log when notifications were pruned and watch mode is not enabled", async () => {
+		mockPruneGitHubNotifications.mockResolvedValueOnce({ threads: [123] });
+
+		await pruneGitHubNotificationsCLI([]);
+
+		expect(console.log).not.toHaveBeenCalled();
+	});
+
+	it("logs the resolved filters when no notifications matched and watch mode is not enabled", async () => {
+		await pruneGitHubNotificationsCLI(["--reason", "abc", "--reason", "def"]);
+
+		expect(vi.mocked(console.log).mock.calls).toMatchInlineSnapshot(`
+			[
+			  [
+			    "No notifications matched the filters:
+			  reason: abc, def
+			  title: /^(?:build|chore)\\(deps\\): (?:(?:bump|update) .+ to|lock file maintenance)/",
+			  ],
+			]
+		`);
 	});
 
 	it("passes parsed arguments to runInWatch when they're valid and watch mode is enabled", async () => {
@@ -64,6 +100,9 @@ describe("pruneGitHubNotificationsCLI", () => {
 				title: [/abc.+def/],
 			},
 		});
-		expect(mockRunInWatch).toHaveBeenCalledWith(expect.any(Function), 10);
+		expect(mockRunInWatch).toHaveBeenCalledWith(expect.any(Function), 10, {
+			reason: new Set(["abc", "def"]),
+			title: [/abc.+def/],
+		});
 	});
 });
