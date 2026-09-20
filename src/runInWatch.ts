@@ -3,8 +3,6 @@ import chalk from "chalk";
 import { formatFilters } from "./formatFilters.js";
 import { FilterOptions, PruneGitHubNotificationsResult } from "./types.js";
 
-// Transient failures (e.g. a locked keyring making `gh auth token` fail, or a
-// network blip) shouldn't stop watch mode, but persistent ones should.
 const maxConsecutiveFailures = 3;
 
 export async function runInWatch(
