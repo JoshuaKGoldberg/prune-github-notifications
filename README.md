@@ -129,6 +129,52 @@ await pruneGitHubNotifications({
 });
 ```
 
+## Recipes
+
+Suggested ways to keep `prune-github-notifications` running so notifications stay pruned without you having to think about it.
+
+### GitHub Actions Workflow
+
+A scheduled workflow can prune your notifications on a timer, even when your computer is off.
+Store a token as a repository secret and run `npx prune-github-notifications` from a workflow such as `.github/workflows/prune-github-notifications.yaml`:
+
+```yaml
+jobs:
+  prune:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+      - env:
+          GH_TOKEN: ${{ secrets.PRUNE_GH_TOKEN }}
+        run: npx prune-github-notifications
+
+name: Prune GitHub Notifications
+
+on:
+  schedule:
+    - cron: "*/10 * * * *"
+  workflow_dispatch: ~
+```
+
+Some things to know before setting this up:
+
+- The GitHub notifications API [only supports personal access tokens (classic)](https://docs.github.com/en/rest/activity/notifications) with the `notifications` scope, not fine-grained tokens.
+  The token is tied to your account, so keep the workflow in a personal repository (private, ideally) rather than one shared with a team.
+- The `GH_TOKEN` environment variable is what `--auth` defaults to, so no other options are needed to authenticate.
+- [Scheduled workflows](https://docs.github.com/en/actions/writing-workflows/choosing-when-your-workflow-runs/events-that-trigger-workflows#schedule) run on a best-effort basis and may be delayed or dropped under high load, especially at the top of each hour.
+  In a public repository, they're also disabled automatically after 60 days without repository activity.
+  The `workflow_dispatch` trigger lets you run the workflow manually from the Actions tab.
+
+### Watch Mode
+
+If you'd rather keep a terminal open, [`--watch`](#cli-options) re-runs pruning on an interval without needing an external scheduler:
+
+```shell
+npx prune-github-notifications --watch 60
+```
+
 ## Development
 
 See [`.github/CONTRIBUTING.md`](./.github/CONTRIBUTING.md), then [`.github/DEVELOPMENT.md`](./.github/DEVELOPMENT.md).
