@@ -1,3 +1,4 @@
+import debug from "debug";
 import { octokitFromAuth } from "octokit-from-auth";
 import throttledQueue from "throttled-queue";
 
@@ -10,6 +11,8 @@ import {
 	PruneGitHubNotificationsOptions,
 	PruneGitHubNotificationsResult,
 } from "./types.js";
+
+const log = debug("prune-github-notifications");
 
 type ThrottledQueue = (
 	maxRequestsPerInterval: number,
@@ -29,6 +32,8 @@ export async function pruneGitHubNotifications({
 			"X-GitHub-Api-Version": "2022-11-28",
 		},
 	});
+	log("Fetched %d notification(s)", notifications.data.length);
+
 	const resolvedFilters = resolveFilters(filters);
 	const threadFilter = createThreadFilter(resolvedFilters);
 	const lastCommentByFilter = createLastCommentByFilter(resolvedFilters);
@@ -59,9 +64,12 @@ export async function pruneGitHubNotifications({
 
 	const threads = matchingThreads.map((thread) => Number(thread.id));
 
+	log("%d notification(s) matched filters", threads.length);
+
 	await Promise.all(
 		threads.map(async (thread) => {
 			await throttle(async () => {
+				log("Pruning thread %d", thread);
 				await octokit.request("DELETE /notifications/threads/{thread_id}", {
 					headers: {
 						"X-GitHub-Api-Version": "2022-11-28",
@@ -80,6 +88,8 @@ export async function pruneGitHubNotifications({
 			});
 		}),
 	);
+
+	log("Pruned %d thread(s)", threads.length);
 
 	return { threads };
 }
