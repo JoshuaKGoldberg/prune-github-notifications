@@ -117,7 +117,7 @@ describe("pruneGitHubNotifications", () => {
 		`);
 	});
 
-	describe("commentAuthor", () => {
+	describe("comment authors", () => {
 		const notificationsWithComments = {
 			data: [
 				{
@@ -218,6 +218,32 @@ describe("pruneGitHubNotifications", () => {
 				  ],
 				]
 			`);
+		});
+
+		it("only unsubscribes from threads whose latest comment author is a bot when botComments is true", async () => {
+			mockRequest.mockImplementation((route: string) => {
+				if (route === "GET /notifications") {
+					return Promise.resolve(notificationsWithComments);
+				}
+
+				if (route in commentAuthors) {
+					return Promise.resolve({
+						data: { user: { login: commentAuthors[route] } },
+					});
+				}
+
+				return Promise.resolve({});
+			});
+
+			const result = await pruneGitHubNotifications({
+				filters: {
+					botComments: true,
+					reason: new Set(["author"]),
+					title: [/PR/],
+				},
+			});
+
+			expect(result.threads).toEqual([12]);
 		});
 	});
 });

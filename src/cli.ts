@@ -14,6 +14,7 @@ Prunes GitHub notifications you don't care about, such as automated dependency b
 Options:
   --auth           GitHub auth token (default: process.env.GH_TOKEN or 'gh auth token')
   --bandwidth      Maximum parallel requests to start at once (default: 6)
+  --botComments    Additionally filter to threads whose latest comment is from a [bot] account
   --commentAuthor  Latest comment author username(s) to additionally filter to
   --reason         Notification reason(s) to filter to (default: "subscribed")
   --title          Notification title regular expression(s) to filter to (default: dependency updates)
@@ -28,6 +29,7 @@ Examples:
 
 const schema = z.object({
 	bandwidth: z.coerce.number().optional(),
+	botComments: z.boolean().optional(),
 	commentAuthor: z
 		.array(z.string())
 		.optional()
@@ -53,6 +55,9 @@ export async function pruneGitHubNotificationsCLI(args: string[]) {
 			},
 			bandwidth: {
 				type: "string",
+			},
+			botComments: {
+				type: "boolean",
 			},
 			commentAuthor: {
 				multiple: true,
@@ -81,9 +86,9 @@ export async function pruneGitHubNotificationsCLI(args: string[]) {
 		return;
 	}
 
-	const { bandwidth, commentAuthor, reason, title, watch } =
+	const { bandwidth, botComments, commentAuthor, reason, title, watch } =
 		schema.parse(values);
-	const filters = resolveFilters({ commentAuthor, reason, title });
+	const filters = resolveFilters({ botComments, commentAuthor, reason, title });
 
 	const action = async () =>
 		await pruneGitHubNotifications({ bandwidth, filters });

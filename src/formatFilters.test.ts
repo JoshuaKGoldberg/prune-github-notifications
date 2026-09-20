@@ -28,4 +28,17 @@ describe("formatFilters", () => {
 			  title: /.*/"
 		`);
 	});
+
+	it("includes botComments when true", () => {
+		const actual = formatFilters({
+			botComments: true,
+			reason: new Set(["author"]),
+			title: [/.*/],
+		});
+
+		expect(actual).toMatchInlineSnapshot(`
+			"  reason: author
+			  title: /.*/"
+		`);
+	});
 });

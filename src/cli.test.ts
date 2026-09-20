@@ -67,6 +67,18 @@ describe("pruneGitHubNotificationsCLI", () => {
 		});
 	});
 
+	it("passes botComments to pruneGitHubNotifications when provided", async () => {
+		await pruneGitHubNotificationsCLI(["--botComments"]);
+
+		expect(mockPruneGitHubNotifications).toHaveBeenCalledWith({
+			bandwidth: undefined,
+			filters: {
+				...defaultOptions.filters,
+				botComments: true,
+			},
+		});
+	});
+
 	it("passes commentAuthor to pruneGitHubNotifications when provided", async () => {
 		await pruneGitHubNotificationsCLI(["--commentAuthor", "codecov[bot]"]);
 

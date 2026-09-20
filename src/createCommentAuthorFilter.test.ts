@@ -38,4 +38,42 @@ describe("createCommentAuthorFilter", () => {
 
 		expect(filter?.(undefined)).toBe(false);
 	});
+
+	it("allows a bot author when botComments is true", () => {
+		const filter = createCommentAuthorFilter({
+			...filters,
+			botComments: true,
+		});
+
+		expect(filter?.("renovate[bot]")).toBe(true);
+	});
+
+	it("filters out a non-bot author when botComments is true", () => {
+		const filter = createCommentAuthorFilter({
+			...filters,
+			botComments: true,
+		});
+
+		expect(filter?.("human")).toBe(false);
+	});
+
+	it("allows an author in commentAuthor when botComments is also true", () => {
+		const filter = createCommentAuthorFilter({
+			...filters,
+			botComments: true,
+			commentAuthor: new Set(["human"]),
+		});
+
+		expect(filter?.("human")).toBe(true);
+	});
+
+	it("filters out a bot author when botComments is false and commentAuthor does not include it", () => {
+		const filter = createCommentAuthorFilter({
+			...filters,
+			botComments: false,
+			commentAuthor: new Set(["human"]),
+		});
+
+		expect(filter?.("renovate[bot]")).toBe(false);
+	});
 });

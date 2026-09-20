@@ -1,5 +1,11 @@
 export interface FilterOptions {
 	/**
+	 * Whether to additionally filter to threads whose latest comment is from a
+	 * `[bot]` account.
+	 */
+	botComments?: boolean;
+
+	/**
 	 * Usernames of latest comment authors to additionally filter to, if any.
 	 */
 	commentAuthor?: ReadonlySet<string>;

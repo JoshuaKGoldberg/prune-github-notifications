@@ -8,11 +8,15 @@ export type CommentAuthorFilter = (author: string | undefined) => boolean;
  * skip fetching comment data altogether.
  */
 export function createCommentAuthorFilter({
+	botComments,
 	commentAuthor,
 }: FilterOptions): CommentAuthorFilter | undefined {
-	if (!commentAuthor) {
+	if (!botComments && !commentAuthor) {
 		return undefined;
 	}
 
-	return (author) => author !== undefined && commentAuthor.has(author);
+	return (author) =>
+		author !== undefined &&
+		(!!commentAuthor?.has(author) ||
+			(!!botComments && author.endsWith("[bot]")));
 }
