@@ -24,7 +24,6 @@ export async function runInWatch(
 		} else {
 			console.log(time, chalk.gray(`No threads found.`));
 
-			// Only the first empty run explains the filters, to keep later logs terse
 			if (!loggedFilters) {
 				console.log(chalk.gray(formatFilters(filters)));
 				loggedFilters = true;
