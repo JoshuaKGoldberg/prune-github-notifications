@@ -3,6 +3,10 @@ import chalk from "chalk";
 import { formatFilters } from "./formatFilters.js";
 import { FilterOptions, PruneGitHubNotificationsResult } from "./types.js";
 
+// Transient failures (e.g. a locked keyring making `gh auth token` fail, or a
+// network blip) shouldn't stop watch mode, but persistent ones should.
+const maxConsecutiveFailures = 3;
+
 export async function runInWatch(
 	action: () => Promise<PruneGitHubNotificationsResult>,
 	watch: number,
@@ -10,19 +14,41 @@ export async function runInWatch(
 ) {
 	console.log(`Running prune-github-notifications with --watch ${watch}...`);
 
+	let consecutiveFailures = 0;
 	let loggedFilters = false;
 
 	while (true) {
-		const { threads } = await action();
-		const time = chalk.gray(`[${new Date().toISOString()}]`);
+		let threads: number[];
+
+		try {
+			({ threads } = await action());
+			consecutiveFailures = 0;
+		} catch (error) {
+			consecutiveFailures += 1;
+
+			if (consecutiveFailures >= maxConsecutiveFailures) {
+				throw error;
+			}
+
+			console.log(
+				formatTime(),
+				chalk.red(
+					`Failed to prune notifications (attempt ${consecutiveFailures.toString()}/${maxConsecutiveFailures.toString()}):`,
+				),
+				error instanceof Error ? error.message : error,
+			);
+
+			await sleep(watch);
+			continue;
+		}
 
 		if (threads.length) {
 			console.log(
-				time,
+				formatTime(),
 				`Pruned ${threads.length.toString()} thread${threads.length === 1 ? "" : "s"}.`,
 			);
 		} else {
-			console.log(time, chalk.gray(`No threads found.`));
+			console.log(formatTime(), chalk.gray(`No threads found.`));
 
 			if (!loggedFilters) {
 				console.log(chalk.gray(formatFilters(filters)));
@@ -30,6 +56,14 @@ export async function runInWatch(
 			}
 		}
 
-		await new Promise((resolve) => setTimeout(resolve, watch * 1000));
+		await sleep(watch);
 	}
+}
+
+function formatTime() {
+	return chalk.gray(`[${new Date().toISOString()}]`);
+}
+
+async function sleep(seconds: number) {
+	await new Promise((resolve) => setTimeout(resolve, seconds * 1000));
 }
