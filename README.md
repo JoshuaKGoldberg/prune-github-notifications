@@ -35,7 +35,7 @@ npx prune-github-notifications
 | `--auth`      | `string`   | `process.env.GH_TOKEN` or executing `gh auth token`                                 | Auth token for GitHub from [`octokit-from-auth`](https://github.com/JoshuaKGoldberg/octokit-from-auth). |
 | `--bandwidth` | `number`   | `6`                                                                                 | Maximum parallel requests to start at once.                                                             |
 | `--help`      | `boolean`  | `false`                                                                             | Prints a usage message and exits.                                                                       |
-| `--reason`    | `string[]` | `["subscribed"]`                                                                    | Notification reason(s) to filter to.                                                                    |
+| `--reason`    | `string[]` | `["subscribed"]`                                                                    | Notification reason(s) to filter to, or `any` to match all reasons.                                     |
 | `--title`     | `string[]` | `["^(?:build\|chore)\(deps\): (?:(?:bump\|update) .+ to"\|lock file maintenance))]` | Notification title regular expressions to filter to.                                                    |
 | `--watch`     | `number`   | `0`                                                                                 | A seconds interval to continuously re-run this on, if truthy.                                           |
 
@@ -43,6 +43,12 @@ For example, providing all functional options on the CLI:
 
 ```shell
 npx prune-github-notifications --bandwidth 10 --reason subscribed --title "^chore.+ update .+ to"
+```
+
+Pruning matching titles regardless of notification reason (e.g. `review_requested` from being a CODEOWNER):
+
+```shell
+npx prune-github-notifications --reason any
 ```
 
 Running in watch mode to clear notifications every ten seconds:
@@ -73,12 +79,12 @@ await pruneGitHubNotifications();
 
 Only `auth` is required, and only if a `GH_TOKEN` isn't available.
 
-| Option      | Type          | Default                                                              | Description                                              |
-| ----------- | ------------- | -------------------------------------------------------------------- | -------------------------------------------------------- |
-| `auth`      | `string`      | `process.env.GH_TOKEN`                                               | GitHub authentication token with _notifications_ access. |
-| `bandwidth` | `number`      | `6`                                                                  | Maximum parallel requests to start at once.              |
-| `reason`    | `Set<string>` | `Set {"subscribed"}`                                                 | Notification reason(s) to filter to.                     |
-| `title`     | `RegExp[]`    | `[/^chore\(deps\): update .+ to/, /^build\(deps-dev\): bump .+ to/]` | Notification title regular expressions to filter to.     |
+| Option      | Type          | Default                                                              | Description                                                         |
+| ----------- | ------------- | -------------------------------------------------------------------- | ------------------------------------------------------------------- |
+| `auth`      | `string`      | `process.env.GH_TOKEN`                                               | GitHub authentication token with _notifications_ access.            |
+| `bandwidth` | `number`      | `6`                                                                  | Maximum parallel requests to start at once.                         |
+| `reason`    | `Set<string>` | `Set {"subscribed"}`                                                 | Notification reason(s) to filter to, or `any` to match all reasons. |
+| `title`     | `RegExp[]`    | `[/^chore\(deps\): update .+ to/, /^build\(deps-dev\): bump .+ to/]` | Notification title regular expressions to filter to.                |
 
 For example, providing all options to the Node.js API:
 
