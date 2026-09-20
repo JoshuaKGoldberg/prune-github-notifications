@@ -129,6 +129,120 @@ describe("runInWatch", () => {
 			),
 		).toHaveLength(1);
 	});
+
+	it("logs the error and keeps running when the action fails once", async () => {
+		const { promise, resolve } = withResolvers();
+		let runCount = 0;
+
+		mockSetTimeout.mockImplementation((action: () => void) => {
+			if ((runCount += 1) < 2) {
+				action();
+			} else {
+				resolve();
+			}
+		});
+
+		const action = vi
+			.fn()
+			.mockRejectedValueOnce(new Error("Oh no!"))
+			.mockResolvedValueOnce({ threads: [111] });
+
+		// eslint-disable-next-line @typescript-eslint/no-floating-promises
+		runInWatch(action, 1, filters);
+		await promise;
+
+		expect(mockLog).toHaveBeenCalledWith(
+			expect.any(String),
+			chalk.red("Failed to prune notifications (attempt 1/3):"),
+			"Oh no!",
+		);
+		expect(mockLog).toHaveBeenCalledWith(
+			expect.any(String),
+			"Pruned 1 thread.",
+		);
+		expect(action).toHaveBeenCalledTimes(2);
+	});
+
+	it("resets the failure count when the action succeeds between failures", async () => {
+		const { promise, resolve } = withResolvers();
+		let runCount = 0;
+
+		mockSetTimeout.mockImplementation((action: () => void) => {
+			if ((runCount += 1) < 5) {
+				action();
+			} else {
+				resolve();
+			}
+		});
+
+		const action = vi
+			.fn()
+			.mockRejectedValueOnce(new Error("First"))
+			.mockRejectedValueOnce(new Error("Second"))
+			.mockResolvedValueOnce({ threads: [111] })
+			.mockRejectedValueOnce(new Error("Third"))
+			.mockRejectedValueOnce(new Error("Fourth"));
+
+		// eslint-disable-next-line @typescript-eslint/no-floating-promises
+		runInWatch(action, 1, filters);
+		await promise;
+
+		expect(action).toHaveBeenCalledTimes(5);
+		expect(
+			mockLog.mock.calls.filter(
+				([, message]) =>
+					message === chalk.red("Failed to prune notifications (attempt 1/3):"),
+			),
+		).toHaveLength(2);
+		expect(
+			mockLog.mock.calls.filter(
+				([, message]) =>
+					message === chalk.red("Failed to prune notifications (attempt 2/3):"),
+			),
+		).toHaveLength(2);
+	});
+
+	it("rethrows the error when the action fails three times in a row", async () => {
+		mockSetTimeout.mockImplementation((action: () => void) => {
+			action();
+		});
+
+		const action = vi
+			.fn()
+			.mockRejectedValueOnce(new Error("First"))
+			.mockRejectedValueOnce(new Error("Second"))
+			.mockRejectedValueOnce(new Error("Third"));
+
+		await expect(runInWatch(action, 1, filters)).rejects.toThrow("Third");
+
+		expect(action).toHaveBeenCalledTimes(3);
+		expect(mockSetTimeout).toHaveBeenCalledTimes(2);
+		expect(mockLog).not.toHaveBeenCalledWith(
+			expect.any(String),
+			chalk.red("Failed to prune notifications (attempt 3/3):"),
+			expect.anything(),
+		);
+	});
+
+	it("logs a non-Error rejection value as-is", async () => {
+		const { promise, resolve } = withResolvers();
+
+		mockSetTimeout.mockImplementation(() => {
+			resolve();
+		});
+
+		const action = vi.fn().mockRejectedValueOnce("just a string");
+
+		// eslint-disable-next-line @typescript-eslint/no-floating-promises
+		runInWatch(action, 1, filters);
+		await promise;
+
+		expect(mockLog).toHaveBeenCalledWith(
+			expect.any(String),
+			chalk.red("Failed to prune notifications (attempt 1/3):"),
+			"just a string",
+		);
+	});
 });
 
 function withResolvers() {
