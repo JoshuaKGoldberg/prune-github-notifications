@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.9.0](https://github.com/JoshuaKGoldberg/prune-github-notifications/compare/0.8.0...0.9.0) (2026-09-20)
+
+### Features
+
+- allow "any" reason to match all notification reasons ([#751](https://github.com/JoshuaKGoldberg/prune-github-notifications/issues/751)) ([0c7692e](https://github.com/JoshuaKGoldberg/prune-github-notifications/commit/0c7692e310453ca1f3f1e5a7856a29d8c49995a9)), closes [#748](https://github.com/JoshuaKGoldberg/prune-github-notifications/issues/748)
+
 ## [0.8.0](https://github.com/JoshuaKGoldberg/prune-github-notifications/compare/0.7.1...0.8.0) (2026-09-20)
 
 ### Features
