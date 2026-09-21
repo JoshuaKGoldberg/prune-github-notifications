@@ -5,6 +5,11 @@ export interface FilterOptions {
 	createdBy?: RegExp[];
 
 	/**
+	 * Issue or pull request label regular expressions to additionally filter to, if any.
+	 */
+	label?: RegExp[];
+
+	/**
 	 * Latest comment author username regular expressions to additionally filter to, if any.
 	 */
 	lastCommentBy?: RegExp[];
