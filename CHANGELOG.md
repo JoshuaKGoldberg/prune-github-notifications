@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.13.2](https://github.com/JoshuaKGoldberg/prune-github-notifications/compare/0.13.1...0.13.2) (2026-09-21)
+
+### Bug Fixes
+
+- forward --auth CLI flag to pruneGitHubNotifications ([#761](https://github.com/JoshuaKGoldberg/prune-github-notifications/issues/761)) ([6c0e887](https://github.com/JoshuaKGoldberg/prune-github-notifications/commit/6c0e8872ce54cec9a8abbcdcdd58527c24480c3a)), closes [#767](https://github.com/JoshuaKGoldberg/prune-github-notifications/issues/767)
+
 ## [0.13.1](https://github.com/JoshuaKGoldberg/prune-github-notifications/compare/0.13.0...0.13.1) (2026-09-20)
 
 ### Bug Fixes
