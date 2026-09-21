@@ -1,4 +1,4 @@
-import chalk from "chalk";
+import { styleText } from "node:util";
 
 import { formatFilters } from "./formatFilters.js";
 import { FilterOptions, PruneGitHubNotificationsResult } from "./types.js";
@@ -30,7 +30,8 @@ export async function runInWatch(
 
 			console.log(
 				formatTime(),
-				chalk.red(
+				styleText(
+					"red",
 					`Failed to prune notifications (attempt ${consecutiveFailures.toString()}/${maxConsecutiveFailures.toString()}):`,
 				),
 				error instanceof Error ? error.message : error,
@@ -46,10 +47,10 @@ export async function runInWatch(
 				`Pruned ${threads.length.toString()} thread${threads.length === 1 ? "" : "s"}.`,
 			);
 		} else {
-			console.log(formatTime(), chalk.gray(`No threads found.`));
+			console.log(formatTime(), styleText("gray", `No threads found.`));
 
 			if (!loggedFilters) {
-				console.log(chalk.gray(formatFilters(filters)));
+				console.log(styleText("gray", formatFilters(filters)));
 				loggedFilters = true;
 			}
 		}
@@ -59,7 +60,7 @@ export async function runInWatch(
 }
 
 function formatTime() {
-	return chalk.gray(`[${new Date().toISOString()}]`);
+	return styleText("gray", `[${new Date().toISOString()}]`);
 }
 
 async function sleep(seconds: number) {
