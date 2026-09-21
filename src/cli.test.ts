@@ -148,7 +148,7 @@ describe("pruneGitHubNotificationsCLI", () => {
 			  [
 			    "No notifications matched the filters:
 			  reason: abc, def
-			  title: /^(?:build|chore)\\(deps\\): (?:(?:bump|update) .+ to|lock file maintenance)/",
+			  title: /^(?:build|chore)\\(deps\\): (?:(?:bump|update) .+ to|lock file maintenance)/, /^Bump .+ from .+ to .+/",
 			  ],
 			]
 		`);

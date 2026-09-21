@@ -9,6 +9,9 @@ describe("defaultOptions", () => {
 				"build(deps): bump abc to 1.2.3",
 				"build(deps): lock file maintenance",
 				"build(deps): update abc to 1.2.3",
+				"Bump abc from 1.2.2 to 1.2.3",
+				"Bump abc from 1.2.2 to 1.2.3 in /packages/def",
+				"Bump abc from 1.2.2 to 1.2.3 in the def group",
 				"chore(deps): bump abc to 1.2.3",
 				"chore(deps): lock file maintenance",
 				"chore(deps): update abc to 1.2.3",
@@ -20,6 +23,8 @@ describe("defaultOptions", () => {
 
 			it.each([
 				"bump abc to 1.2.3",
+				"Bump abc to 1.2.3",
+				"bump abc from 1.2.2 to 1.2.3",
 				"lock file maintenance",
 				"chore: bump abc to 1.2.3",
 				"feat: bump abc to 1.2.3",

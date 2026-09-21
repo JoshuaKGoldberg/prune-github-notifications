@@ -11,6 +11,7 @@ export const defaultOptions = {
 		reason: new Set(["subscribed"]),
 		title: [
 			/^(?:build|chore)\(deps\): (?:(?:bump|update) .+ to|lock file maintenance)/,
+			/^Bump .+ from .+ to .+/,
 		],
 	},
 } satisfies PruneGitHubNotificationsOptions;
