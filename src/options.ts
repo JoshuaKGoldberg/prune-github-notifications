@@ -10,9 +10,7 @@ export const defaultOptions = {
 	filters: {
 		reason: new Set(["subscribed"]),
 		title: [
-			// Renovate, and Dependabot with a commit-message prefix
 			/^(?:build|chore)\(deps\): (?:(?:bump|update) .+ to|lock file maintenance)/,
-			// Dependabot without a commit-message prefix
 			/^Bump .+ from .+ to .+/,
 		],
 	},
