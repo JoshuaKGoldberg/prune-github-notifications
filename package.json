@@ -35,7 +35,6 @@
 		"*": "prettier --ignore-unknown --write"
 	},
 	"dependencies": {
-		"chalk": "^6.0.0",
 		"debug": "^4.4.3",
 		"octokit-from-auth": "^0.3.2",
 		"throttled-queue": "^2.1.4",
@@ -78,7 +77,7 @@
 	},
 	"packageManager": "pnpm@12.4.0",
 	"engines": {
-		"node": ">=20"
+		"node": "^22.13.0 || >=24.0.0"
 	},
 	"publishConfig": {
 		"provenance": true
