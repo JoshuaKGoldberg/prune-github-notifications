@@ -16,4 +16,18 @@ describe("resolveFilters", () => {
 			title: defaultOptions.filters.title,
 		});
 	});
+
+	it("passes through optional filters when they are provided", () => {
+		const createdBy = [/^renovate/];
+		const label = [/^dependencies$/];
+		const lastCommentBy = [/\[bot\]$/];
+
+		expect(resolveFilters({ createdBy, label, lastCommentBy })).toEqual({
+			createdBy,
+			label,
+			lastCommentBy,
+			reason: defaultOptions.filters.reason,
+			title: defaultOptions.filters.title,
+		});
+	});
 });

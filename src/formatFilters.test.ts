@@ -15,9 +15,10 @@ describe("formatFilters", () => {
 		`);
 	});
 
-	it("includes author filters when provided", () => {
+	it("includes author and label filters when provided", () => {
 		const actual = formatFilters({
 			createdBy: [/^renovate/],
+			label: [/^bot$/, /dependencies/],
 			lastCommentBy: [/^codecov/, /\[bot\]$/],
 			reason: new Set(["author"]),
 			title: [/.*/],
@@ -25,6 +26,7 @@ describe("formatFilters", () => {
 
 		expect(actual).toMatchInlineSnapshot(`
 			"  createdBy: /^renovate/
+			  label: /^bot$/, /dependencies/
 			  lastCommentBy: /^codecov/, /\\[bot\\]$/
 			  reason: author
 			  title: /.*/"

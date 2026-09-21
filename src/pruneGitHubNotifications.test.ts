@@ -320,4 +320,110 @@ describe("pruneGitHubNotifications", () => {
 			]);
 		});
 	});
+
+	describe("label", () => {
+		const notificationsWithLabels = {
+			data: [
+				{
+					id: "12",
+					reason: "subscribed",
+					subject: {
+						latest_comment_url: "https://api.github.com/comments/1",
+						title: "PR with a dependencies label",
+						url: "https://api.github.com/pulls/1",
+					},
+				},
+				{
+					id: "34",
+					reason: "subscribed",
+					subject: {
+						latest_comment_url: "https://api.github.com/comments/2",
+						title: "PR with other labels",
+						url: "https://api.github.com/pulls/2",
+					},
+				},
+				{
+					id: "56",
+					reason: "subscribed",
+					subject: {
+						latest_comment_url: null,
+						title: "PR with no url",
+						url: null,
+					},
+				},
+			],
+		};
+
+		const details: Record<
+			string,
+			{ labels?: { name: string }[]; user: { login: string } }
+		> = {
+			"GET https://api.github.com/pulls/1": {
+				labels: [{ name: "dependencies" }, { name: "javascript" }],
+				user: { login: "renovate[bot]" },
+			},
+			"GET https://api.github.com/pulls/2": {
+				labels: [{ name: "bug" }],
+				user: { login: "renovate[bot]" },
+			},
+		};
+
+		const mockNotificationsWithLabels = () => {
+			mockRequest.mockImplementation((route: string) => {
+				if (route === "GET /notifications") {
+					return Promise.resolve(notificationsWithLabels);
+				}
+
+				if (route in details) {
+					return Promise.resolve({ data: details[route] });
+				}
+
+				return Promise.resolve({});
+			});
+		};
+
+		afterEach(() => {
+			mockRequest.mockReset().mockResolvedValue(defaultNotifications);
+		});
+
+		it("only unsubscribes from threads with a label that matches when label is provided", async () => {
+			mockNotificationsWithLabels();
+
+			const result = await pruneGitHubNotifications({
+				filters: {
+					label: [/^dependencies$/],
+					title: [/PR/],
+				},
+			});
+
+			expect(result.threads).toEqual([12]);
+			expect(
+				mockRequest.mock.calls.filter(([route]) =>
+					(route as string).startsWith("GET https://"),
+				),
+			).toHaveLength(2);
+		});
+
+		it("only requests each subject url once when both createdBy and label are provided", async () => {
+			mockNotificationsWithLabels();
+
+			const result = await pruneGitHubNotifications({
+				filters: {
+					createdBy: [/\[bot\]$/],
+					label: [/^dependencies$/],
+					title: [/PR/],
+				},
+			});
+
+			expect(result.threads).toEqual([12]);
+			expect(
+				mockRequest.mock.calls
+					.map(([route]) => route as string)
+					.filter((route) => route.startsWith("GET https://")),
+			).toEqual([
+				"GET https://api.github.com/pulls/1",
+				"GET https://api.github.com/pulls/2",
+			]);
+		});
+	});
 });

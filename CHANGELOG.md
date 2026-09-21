@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.15.0](https://github.com/JoshuaKGoldberg/prune-github-notifications/compare/0.14.0...0.15.0) (2026-09-21)
+
+### Features
+
+- add label filter for issue and PR labels ([#764](https://github.com/JoshuaKGoldberg/prune-github-notifications/issues/764)) ([4f93b32](https://github.com/JoshuaKGoldberg/prune-github-notifications/commit/4f93b32585be0691066668481a8940d265bf67d5)), closes [#18](https://github.com/JoshuaKGoldberg/prune-github-notifications/issues/18)
+
 ## [0.14.0](https://github.com/JoshuaKGoldberg/prune-github-notifications/compare/0.13.2...0.14.0) (2026-09-21)
 
 ### Features

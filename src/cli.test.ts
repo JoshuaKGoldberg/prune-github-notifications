@@ -97,6 +97,23 @@ describe("pruneGitHubNotificationsCLI", () => {
 		});
 	});
 
+	it("passes label to pruneGitHubNotifications when provided", async () => {
+		await pruneGitHubNotificationsCLI([
+			"--label",
+			"^bot$",
+			"--label",
+			"dependencies",
+		]);
+
+		expect(mockPruneGitHubNotifications).toHaveBeenCalledWith({
+			bandwidth: undefined,
+			filters: {
+				...defaultOptions.filters,
+				label: [/^bot$/, /dependencies/],
+			},
+		});
+	});
+
 	it("passes lastCommentBy to pruneGitHubNotifications when provided", async () => {
 		await pruneGitHubNotificationsCLI([
 			"--lastCommentBy",
