@@ -49,6 +49,7 @@ describe("pruneGitHubNotificationsCLI", () => {
 		]);
 
 		expect(mockPruneGitHubNotifications).toHaveBeenCalledWith({
+			auth: undefined,
 			bandwidth: 123,
 			filters: {
 				reason: new Set(["abc", "def"]),
@@ -58,10 +59,21 @@ describe("pruneGitHubNotificationsCLI", () => {
 		expect(mockRunInWatch).not.toHaveBeenCalled();
 	});
 
+	it("passes auth to pruneGitHubNotifications when provided", async () => {
+		await pruneGitHubNotificationsCLI(["--auth", "abc123"]);
+
+		expect(mockPruneGitHubNotifications).toHaveBeenCalledWith({
+			auth: "abc123",
+			bandwidth: undefined,
+			filters: defaultOptions.filters,
+		});
+	});
+
 	it("passes default filters to pruneGitHubNotifications when none are provided", async () => {
 		await pruneGitHubNotificationsCLI([]);
 
 		expect(mockPruneGitHubNotifications).toHaveBeenCalledWith({
+			auth: undefined,
 			bandwidth: undefined,
 			filters: defaultOptions.filters,
 		});
@@ -76,6 +88,7 @@ describe("pruneGitHubNotificationsCLI", () => {
 		]);
 
 		expect(mockPruneGitHubNotifications).toHaveBeenCalledWith({
+			auth: undefined,
 			bandwidth: undefined,
 			filters: {
 				...defaultOptions.filters,
@@ -93,6 +106,7 @@ describe("pruneGitHubNotificationsCLI", () => {
 		]);
 
 		expect(mockPruneGitHubNotifications).toHaveBeenCalledWith({
+			auth: undefined,
 			bandwidth: undefined,
 			filters: {
 				...defaultOptions.filters,
@@ -138,6 +152,7 @@ describe("pruneGitHubNotificationsCLI", () => {
 		]);
 
 		expect(mockPruneGitHubNotifications).toHaveBeenCalledWith({
+			auth: undefined,
 			bandwidth: 123,
 			filters: {
 				reason: new Set(["abc", "def"]),
