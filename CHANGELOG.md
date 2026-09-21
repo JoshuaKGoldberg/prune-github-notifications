@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.16.0](https://github.com/JoshuaKGoldberg/prune-github-notifications/compare/0.15.0...0.16.0) (2026-09-21)
+
+### Features
+
+- add Dependabot's dependency bump format to the default --title ([#770](https://github.com/JoshuaKGoldberg/prune-github-notifications/issues/770)) ([e2b33b0](https://github.com/JoshuaKGoldberg/prune-github-notifications/commit/e2b33b0226ab349beb8508b0c6cb7095715c6420)), closes [#17](https://github.com/JoshuaKGoldberg/prune-github-notifications/issues/17)
+
 ## [0.15.0](https://github.com/JoshuaKGoldberg/prune-github-notifications/compare/0.14.0...0.15.0) (2026-09-21)
 
 ### Features
