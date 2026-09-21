@@ -69,7 +69,6 @@ export async function pruneGitHubNotifications({
 		);
 	};
 
-	// Both createdBy and label read from the subject URL, so they share a lookup
 	const matchingThreads = await filterByUrlDetails(
 		await filterByUrlDetails(
 			notifications.data.filter(threadFilter),
