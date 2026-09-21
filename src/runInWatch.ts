@@ -3,6 +3,8 @@ import { styleText } from "node:util";
 import { formatFilters } from "./formatFilters.js";
 import { FilterOptions, PruneGitHubNotificationsResult } from "./types.js";
 
+const maxConsecutiveFailures = 3;
+
 export async function runInWatch(
 	action: () => Promise<PruneGitHubNotificationsResult>,
 	watch: number,
@@ -10,19 +12,42 @@ export async function runInWatch(
 ) {
 	console.log(`Running prune-github-notifications with --watch ${watch}...`);
 
+	let consecutiveFailures = 0;
 	let loggedFilters = false;
 
 	while (true) {
-		const { threads } = await action();
-		const time = styleText("gray", `[${new Date().toISOString()}]`);
+		let threads: number[];
+
+		try {
+			({ threads } = await action());
+			consecutiveFailures = 0;
+		} catch (error) {
+			consecutiveFailures += 1;
+
+			if (consecutiveFailures >= maxConsecutiveFailures) {
+				throw error;
+			}
+
+			console.log(
+				formatTime(),
+				styleText(
+					"red",
+					`Failed to prune notifications (attempt ${consecutiveFailures.toString()}/${maxConsecutiveFailures.toString()}):`,
+				),
+				error instanceof Error ? error.message : error,
+			);
+
+			await sleep(watch);
+			continue;
+		}
 
 		if (threads.length) {
 			console.log(
-				time,
+				formatTime(),
 				`Pruned ${threads.length.toString()} thread${threads.length === 1 ? "" : "s"}.`,
 			);
 		} else {
-			console.log(time, styleText("gray", `No threads found.`));
+			console.log(formatTime(), styleText("gray", `No threads found.`));
 
 			if (!loggedFilters) {
 				console.log(styleText("gray", formatFilters(filters)));
@@ -30,6 +55,14 @@ export async function runInWatch(
 			}
 		}
 
-		await new Promise((resolve) => setTimeout(resolve, watch * 1000));
+		await sleep(watch);
 	}
+}
+
+function formatTime() {
+	return styleText("gray", `[${new Date().toISOString()}]`);
+}
+
+async function sleep(seconds: number) {
+	await new Promise((resolve) => setTimeout(resolve, seconds * 1000));
 }
