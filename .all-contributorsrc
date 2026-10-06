@@ -18,6 +18,15 @@
       "login": "JoshuaKGoldberg",
       "name": "Josh Goldberg",
       "profile": "http://www.joshuakgoldberg.com"
+    },
+    {
+      "login": "seveibar",
+      "name": "Severin Ibarluzea",
+      "avatar_url": "https://avatars.githubusercontent.com/u/1910070?v=4",
+      "profile": "https://seve.blog",
+      "contributions": [
+        "doc"
+      ]
     }
   ],
   "contributorsPerLine": 7,
