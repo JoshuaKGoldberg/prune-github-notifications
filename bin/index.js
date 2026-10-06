@@ -5,6 +5,9 @@ import { pruneGitHubNotificationsCLI } from "../lib/cli.js";
 try {
 	await pruneGitHubNotificationsCLI(process.argv.slice(2));
 } catch (error) {
-	console.error("Failed to run prune-github-notifications:", error);
-	process.exitCode = -1;
+	console.error(
+		"Failed to run prune-github-notifications:",
+		error instanceof Error ? error.message : error,
+	);
+	process.exitCode = 1;
 }

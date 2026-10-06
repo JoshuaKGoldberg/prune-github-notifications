@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { pruneGitHubNotificationsCLI } from "./cli.js";
 import { defaultOptions } from "./options.js";
@@ -23,16 +23,176 @@ vi.mock("./runInWatch.js", () => ({
 
 describe("pruneGitHubNotificationsCLI", () => {
 	beforeEach(() => {
+		vi.spyOn(console, "error").mockImplementation(() => undefined);
 		vi.spyOn(console, "log").mockImplementation(() => undefined);
+	});
+
+	afterEach(() => {
+		process.exitCode = undefined;
 	});
 
 	it("logs help text without running when --help is provided", async () => {
 		await pruneGitHubNotificationsCLI(["--help"]);
 
+		expect(vi.mocked(console.log).mock.calls).toMatchInlineSnapshot(`
+			[
+			  [
+			    "Usage: prune-github-notifications [options]
+
+			Prunes GitHub notifications you don't care about, such as automated dependency bumps. 🧹
+
+			Options:
+			      --auth <token>           GitHub auth token (default: process.env.GH_TOKEN or 'gh auth token')
+			      --bandwidth <count>      Maximum parallel requests to start at once (default: 6)
+			      --createdBy <regex>      Thread author regular expression(s) to additionally filter to (repeatable)
+			      --label <regex>          Issue or PR label regular expression(s) to additionally filter to (repeatable)
+			      --lastCommentBy <regex>  Latest comment author regular expression(s) to additionally filter to (repeatable)
+			      --reason <reason>        Notification reason(s) to filter to, or 'any' to match all reasons (default: "subscribed", repeatable)
+			      --title <regex>          Notification title regular expression(s) to filter to (default: dependency updates, repeatable)
+			      --watch <seconds>        Seconds interval to continuously re-run on, if truthy (default: 0)
+			  -h, --help                   Show this help message
+
+			Examples:
+			  npx prune-github-notifications
+			  npx prune-github-notifications --reason subscribed --title "^chore.+ update .+ to"
+			  npx prune-github-notifications --reason any --createdBy "^renovate\\[bot\\]$"
+			  npx prune-github-notifications --reason any --title ".*" --label "^dependencies$"
+			  npx prune-github-notifications --reason author --title ".*" --lastCommentBy "\\[bot\\]$"
+			  npx prune-github-notifications --watch 10",
+			  ],
+			]
+		`);
+		expect(mockPruneGitHubNotifications).not.toHaveBeenCalled();
+		expect(mockRunInWatch).not.toHaveBeenCalled();
+		expect(process.exitCode).toBeUndefined();
+	});
+
+	it("logs help text without running when -h is provided", async () => {
+		await pruneGitHubNotificationsCLI(["-h"]);
+
 		expect(console.log).toHaveBeenCalledWith(
-			expect.stringContaining("--watch"),
+			expect.stringContaining("--watch <seconds>"),
 		);
 		expect(mockPruneGitHubNotifications).not.toHaveBeenCalled();
+	});
+
+	it.each([
+		[
+			"an invalid number",
+			["--bandwidth", "abc"],
+			`--bandwidth: Expected a number, received "abc".`,
+		],
+		["a missing value", ["--watch"], "--watch requires a value."],
+		[
+			"an invalid createdBy regular expression",
+			["--createdBy", "("],
+			"--createdBy: Invalid regular expression: /(/: Unterminated group",
+		],
+		[
+			"an invalid label regular expression",
+			["--label", "ok", "--label", ")"],
+			"--label: Invalid regular expression: /)/: Unmatched ')'",
+		],
+		[
+			"an invalid lastCommentBy regular expression",
+			["--lastCommentBy", "a{2,1}"],
+			"--lastCommentBy: Invalid regular expression: /a{2,1}/: numbers out of order in {} quantifier",
+		],
+		[
+			"an invalid title regular expression",
+			["--title", "["],
+			"--title: Invalid regular expression: /[/: Unterminated character class",
+		],
+		[
+			"an unknown flag",
+			["--labels", "abc"],
+			"Unknown flag: --labels (did you mean --label?)",
+		],
+		["a positional argument", ["abc"], "Unexpected argument: abc"],
+	])(
+		"logs a friendly error without running when given %s",
+		async (_, args, expected) => {
+			await expect(pruneGitHubNotificationsCLI(args)).resolves.toBeUndefined();
+
+			expect(console.error).toHaveBeenCalledWith(
+				`${expected}\nRun 'prune-github-notifications --help' for usage.`,
+			);
+			expect(process.exitCode).toBe(1);
+			expect(mockPruneGitHubNotifications).not.toHaveBeenCalled();
+			expect(mockRunInWatch).not.toHaveBeenCalled();
+		},
+	);
+
+	it("logs every issue on its own line without a stack trace when given multiple invalid args", async () => {
+		await pruneGitHubNotificationsCLI([
+			"--bandwidth",
+			"abc",
+			"--title",
+			"[",
+			"--watch=",
+			"--nope",
+		]);
+
+		const output = vi.mocked(console.error).mock.calls.join("\n");
+
+		expect(output).not.toMatch(/^\s+at /m);
+		expect(output).toMatchInlineSnapshot(`
+			"--bandwidth: Expected a number, received "abc".
+			--watch: Expected a number, received "".
+			Unknown flag: --nope
+			--title: Invalid regular expression: /[/: Unterminated character class
+			Run 'prune-github-notifications --help' for usage."
+		`);
+		expect(process.exitCode).toBe(1);
+	});
+
+	it("passes every flag to pruneGitHubNotifications and runInWatch when all are provided", async () => {
+		await pruneGitHubNotificationsCLI([
+			"--auth",
+			"abc123",
+			"--bandwidth",
+			"2.5",
+			"--createdBy",
+			"^renovate",
+			"--label",
+			"^dependencies$",
+			"--lastCommentBy",
+			"\\[bot\\]$",
+			"--reason",
+			"any",
+			"--title",
+			".*",
+			"--watch=30",
+		]);
+
+		const filters = {
+			createdBy: [/^renovate/],
+			label: [/^dependencies$/],
+			lastCommentBy: [/\[bot\]$/],
+			reason: new Set(["any"]),
+			title: [/.*/],
+		};
+
+		expect(mockPruneGitHubNotifications).toHaveBeenCalledWith({
+			auth: "abc123",
+			bandwidth: 2.5,
+			filters,
+		});
+		expect(mockRunInWatch).toHaveBeenCalledWith(
+			expect.any(Function),
+			30,
+			filters,
+		);
+	});
+
+	it("does not enter watch mode when --watch is 0", async () => {
+		await pruneGitHubNotificationsCLI(["--watch", "0"]);
+
+		expect(mockPruneGitHubNotifications).toHaveBeenCalledWith({
+			auth: undefined,
+			bandwidth: undefined,
+			filters: defaultOptions.filters,
+		});
 		expect(mockRunInWatch).not.toHaveBeenCalled();
 	});
 

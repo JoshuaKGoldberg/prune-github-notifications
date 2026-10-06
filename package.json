@@ -37,8 +37,9 @@
 	"dependencies": {
 		"debug": "^4.4.3",
 		"octokit-from-auth": "^0.3.2",
+		"parse-standard-args": "link:../parse-standard-args",
 		"throttled-queue": "^2.1.4",
-		"zod": "^4.3.6"
+		"zod": "^4.6.5"
 	},
 	"devDependencies": {
 		"@eslint-community/eslint-plugin-eslint-comments": "4.8.0",
