@@ -1,109 +1,115 @@
-import { parseArgs } from "node:util";
+import { createCli } from "parse-standard-args";
 import * as z from "zod";
 
 import { formatFilters } from "./formatFilters.js";
+import { defaultOptions } from "./options.js";
 import { pruneGitHubNotifications } from "./pruneGitHubNotifications.js";
 import { resolveFilters } from "./resolveFilters.js";
 import { runInWatch } from "./runInWatch.js";
 
-const helpText = `
-prune-github-notifications
+function regexes() {
+	return z.array(z.string()).transform((values, context) => {
+		const results: RegExp[] = [];
 
-Prunes GitHub notifications you don't care about, such as automated dependency bumps. 🧹
+		for (const value of values) {
+			try {
+				results.push(new RegExp(value));
+			} catch (error) {
+				context.addIssue({
+					code: "custom",
+					input: value,
+					message: (error as Error).message,
+				});
+			}
+		}
 
-Options:
-  --auth           GitHub auth token (default: process.env.GH_TOKEN or 'gh auth token')
-  --bandwidth      Maximum parallel requests to start at once (default: 6)
-  --createdBy      Thread author regular expression(s) to additionally filter to
-  --label          Issue or PR label regular expression(s) to additionally filter to
-  --lastCommentBy  Latest comment author regular expression(s) to additionally filter to
-  --reason         Notification reason(s) to filter to (default: "subscribed")
-  --title          Notification title regular expression(s) to filter to (default: dependency updates)
-  --watch          Seconds interval to continuously re-run on, if truthy (default: 0)
-  --help           Show this help message
+		return results;
+	});
+}
 
-Examples:
-  npx prune-github-notifications
-  npx prune-github-notifications --reason subscribed --title "^chore.+ update .+ to"
-  npx prune-github-notifications --reason any --createdBy "^renovate\\[bot\\]$"
-  npx prune-github-notifications --reason any --title ".*" --label "^dependencies$"
-  npx prune-github-notifications --reason author --title ".*" --lastCommentBy "\\[bot\\]$"
-  npx prune-github-notifications --watch 10
-`;
-
-const schema = z.object({
-	bandwidth: z.coerce.number().optional(),
-	createdBy: z
-		.array(z.string())
-		.transform((values) => values.map((value) => new RegExp(value)))
-		.optional(),
-	label: z
-		.array(z.string())
-		.transform((values) => values.map((value) => new RegExp(value)))
-		.optional(),
-	lastCommentBy: z
-		.array(z.string())
-		.transform((values) => values.map((value) => new RegExp(value)))
-		.optional(),
-	reason: z
-		.array(z.string())
-		.optional()
-		.transform((value) => value && new Set(value)),
-	title: z
-		.array(z.string())
-		.transform((values) => values.map((value) => new RegExp(value)))
-		.optional(),
-	watch: z.coerce.number().optional(),
+const cli = createCli({
+	description:
+		"Prunes GitHub notifications you don't care about, such as automated dependency bumps. 🧹",
+	examples: [
+		"npx prune-github-notifications",
+		'npx prune-github-notifications --reason subscribed --title "^chore.+ update .+ to"',
+		'npx prune-github-notifications --reason any --createdBy "^renovate\\[bot\\]$"',
+		'npx prune-github-notifications --reason any --title ".*" --label "^dependencies$"',
+		'npx prune-github-notifications --reason author --title ".*" --lastCommentBy "\\[bot\\]$"',
+		"npx prune-github-notifications --watch 10",
+	],
+	name: "prune-github-notifications",
+	options: z.object({
+		auth: z.string().optional().describe("GitHub auth token").meta({
+			defaultDescription: "process.env.GH_TOKEN or 'gh auth token'",
+			placeholder: "token",
+		}),
+		bandwidth: z
+			.number()
+			.optional()
+			.describe("Maximum parallel requests to start at once")
+			.meta({
+				defaultDescription: String(defaultOptions.bandwidth),
+				placeholder: "count",
+			}),
+		createdBy: regexes()
+			.optional()
+			.describe("Thread author regular expression(s) to additionally filter to")
+			.meta({ placeholder: "regex" }),
+		label: regexes()
+			.optional()
+			.describe(
+				"Issue or PR label regular expression(s) to additionally filter to",
+			)
+			.meta({ placeholder: "regex" }),
+		lastCommentBy: regexes()
+			.optional()
+			.describe(
+				"Latest comment author regular expression(s) to additionally filter to",
+			)
+			.meta({ placeholder: "regex" }),
+		reason: z
+			.array(z.string())
+			.optional()
+			.transform((value) => value && new Set(value))
+			.describe(
+				"Notification reason(s) to filter to, or 'any' to match all reasons",
+			)
+			.meta({
+				defaultDescription: '"subscribed"',
+				placeholder: "reason",
+			}),
+		title: regexes()
+			.optional()
+			.describe("Notification title regular expression(s) to filter to")
+			.meta({
+				defaultDescription: "dependency updates",
+				placeholder: "regex",
+			}),
+		watch: z
+			.number()
+			.optional()
+			.describe("Seconds interval to continuously re-run on, if truthy")
+			.meta({ defaultDescription: "0", placeholder: "seconds" }),
+	}),
 });
 
 export async function pruneGitHubNotificationsCLI(args: string[]) {
-	const { values } = parseArgs({
-		args,
-		options: {
-			auth: {
-				type: "string",
-			},
-			bandwidth: {
-				type: "string",
-			},
-			createdBy: {
-				multiple: true,
-				type: "string",
-			},
-			help: {
-				type: "boolean",
-			},
-			label: {
-				multiple: true,
-				type: "string",
-			},
-			lastCommentBy: {
-				multiple: true,
-				type: "string",
-			},
-			reason: {
-				multiple: true,
-				type: "string",
-			},
-			title: {
-				multiple: true,
-				type: "string",
-			},
-			watch: {
-				type: "string",
-			},
-		},
-		tokens: true,
-	});
-
-	if (values.help) {
-		console.log(helpText);
+	const parsed = await cli.run(args);
+	if (!parsed) {
 		return;
 	}
 
-	const { auth } = values;
-	const { bandwidth, createdBy, label, lastCommentBy, reason, title, watch } =
-		schema.parse(values);
+	const {
+		auth,
+		bandwidth,
+		createdBy,
+		label,
+		lastCommentBy,
+		reason,
+		title,
+		watch,
+	} = parsed.values;
 	const filters = resolveFilters({
 		createdBy,
 		label,
