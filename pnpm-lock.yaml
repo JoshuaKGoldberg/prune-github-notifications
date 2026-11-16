@@ -249,20 +249,20 @@ importers:
         specifier: 17.6.0
         version: 17.6.0
       prettier:
-        specifier: 3.9.0
-        version: 3.9.0
+        specifier: 3.10.1
+        version: 3.10.1
       prettier-plugin-curly:
         specifier: 0.4.1
-        version: 0.4.1(prettier@3.9.0)
+        version: 0.4.1(prettier@3.10.1)
       prettier-plugin-packagejson:
         specifier: 3.0.2
-        version: 3.0.2(prettier@3.9.0)
+        version: 3.0.2(prettier@3.10.1)
       prettier-plugin-sentences-per-line:
         specifier: 0.2.3
-        version: 0.2.3(prettier@3.9.0)
+        version: 0.2.3(prettier@3.10.1)
       prettier-plugin-sh:
         specifier: 0.20.0
-        version: 0.20.0(prettier@3.9.0)
+        version: 0.20.0(prettier@3.10.1)
       release-it:
         specifier: 21.1.0
         version: 21.1.0(@types/node@26.6.5)(magicast@0.5.5)
@@ -3272,8 +3272,8 @@ packages:
     peerDependencies:
       prettier: ^3.6.0
 
-  prettier@3.9.0:
-    resolution: {integrity: sha512-LjIqSIC5VYLzs9WedVmJ2ljNAGnU+DteIClbahu4L/DBeWjZ6iT/k1lAYyu9JUh+1xINxWadaPw/Pl63y/agAw==}
+  prettier@3.10.1:
+    resolution: {integrity: sha512-70vp3ZUYoPlFbF9uiTdXHUUCGEIp7d4+6p+8DYbkm2jP7x/3i/paXVF6dopSI3zd/CEitrZN1rc4i85xWmmXlg==}
     engines: {node: '>=14'}
     hasBin: true
 
@@ -7117,28 +7117,28 @@ snapshots:
 
   prelude-ls@1.2.1: {}
 
-  prettier-plugin-curly@0.4.1(prettier@3.9.0):
+  prettier-plugin-curly@0.4.1(prettier@3.10.1):
     dependencies:
-      prettier: 3.9.0
+      prettier: 3.10.1
 
-  prettier-plugin-packagejson@3.0.2(prettier@3.9.0):
+  prettier-plugin-packagejson@3.0.2(prettier@3.10.1):
     dependencies:
       sort-package-json: 3.7.1
     optionalDependencies:
-      prettier: 3.9.0
+      prettier: 3.10.1
 
-  prettier-plugin-sentences-per-line@0.2.3(prettier@3.9.0):
+  prettier-plugin-sentences-per-line@0.2.3(prettier@3.10.1):
     dependencies:
-      prettier: 3.9.0
+      prettier: 3.10.1
       sentences-per-line: 0.5.6
 
-  prettier-plugin-sh@0.20.0(prettier@3.9.0):
+  prettier-plugin-sh@0.20.0(prettier@3.10.1):
     dependencies:
       '@reteps/dockerfmt': 0.5.4
-      prettier: 3.9.0
+      prettier: 3.10.1
       sh-syntax: 0.7.0
 
-  prettier@3.9.0: {}
+  prettier@3.10.1: {}
 
   pretty-ms@9.3.1:
     dependencies:
