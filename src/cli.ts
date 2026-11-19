@@ -1,4 +1,4 @@
-import { createCli } from "parse-standard-args";
+import { parseStandardArgv } from "parse-standard-args";
 import * as z from "zod";
 
 import { formatFilters } from "./formatFilters.js";
@@ -27,7 +27,7 @@ function regexes() {
 	});
 }
 
-const cli = createCli({
+const settings = {
 	description:
 		"Prunes GitHub notifications you don't care about, such as automated dependency bumps. 🧹",
 	examples: [
@@ -92,11 +92,19 @@ const cli = createCli({
 			.describe("Seconds interval to continuously re-run on, if truthy")
 			.meta({ defaultDescription: "0", placeholder: "seconds" }),
 	}),
-});
+};
 
 export async function pruneGitHubNotificationsCLI(args: string[]) {
-	const parsed = await cli.run(args);
-	if (!parsed) {
+	const parsed = parseStandardArgv(args, settings);
+
+	if (parsed.type === "error") {
+		console.error(parsed.text);
+		process.exitCode = 1;
+		return;
+	}
+
+	if (parsed.type !== "values") {
+		console.log(parsed.text);
 		return;
 	}
 
