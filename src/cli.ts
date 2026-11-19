@@ -76,7 +76,9 @@ const settings = {
 				"Notification reason(s) to filter to, or 'any' to match all reasons",
 			)
 			.meta({
-				defaultDescription: '"subscribed"',
+				defaultDescription: [...defaultOptions.filters.reason]
+					.map((reason) => JSON.stringify(reason))
+					.join(", "),
 				placeholder: "reason",
 			}),
 		title: regexes()

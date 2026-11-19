@@ -39,7 +39,7 @@
 		"octokit-from-auth": "^0.3.2",
 		"parse-standard-args": "^0.3.0",
 		"throttled-queue": "^2.1.4",
-		"zod": "^4.6.5"
+		"zod": "^4.3.6"
 	},
 	"devDependencies": {
 		"@eslint-community/eslint-plugin-eslint-comments": "4.8.0",
