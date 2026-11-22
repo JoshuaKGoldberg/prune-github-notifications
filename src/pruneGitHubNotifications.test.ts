@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 
-import { pruneGitHubNotifications } from "./pruneGitHubNotifications.js";
+import { pruneGitHubNotifications } from "./pruneGitHubNotifications.ts";
 
 const defaultNotifications = {
 	data: [
@@ -44,7 +44,7 @@ vi.mock("octokit-from-auth", () => ({
 		}),
 }));
 
-describe("pruneGitHubNotifications", () => {
+describe(pruneGitHubNotifications, () => {
 	it("unsubscribes from threads based on default filters when no filters are provided", async () => {
 		await pruneGitHubNotifications();
 

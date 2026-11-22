@@ -1,10 +1,10 @@
 import { parseArgs } from "node:util";
 import * as z from "zod";
 
-import { formatFilters } from "./formatFilters.js";
-import { pruneGitHubNotifications } from "./pruneGitHubNotifications.js";
-import { resolveFilters } from "./resolveFilters.js";
-import { runInWatch } from "./runInWatch.js";
+import { formatFilters } from "./formatFilters.ts";
+import { pruneGitHubNotifications } from "./pruneGitHubNotifications.ts";
+import { resolveFilters } from "./resolveFilters.ts";
+import { runInWatch } from "./runInWatch.ts";
 
 const helpText = `
 prune-github-notifications

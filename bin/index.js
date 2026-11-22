@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import { pruneGitHubNotificationsCLI } from "../lib/cli.js";
+import { pruneGitHubNotificationsCLI } from "../dist/cli.js";
 
 try {
 	await pruneGitHubNotificationsCLI(process.argv.slice(2));

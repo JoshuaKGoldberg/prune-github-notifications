@@ -1,8 +1,8 @@
 import { describe, expect, it, test } from "vitest";
 
-import { createThreadFilter } from "./createThreadFilter.js";
+import { createThreadFilter } from "./createThreadFilter.ts";
 
-describe("createThreadFilter", () => {
+describe(createThreadFilter, () => {
 	it("filters out a thread when its reason does not match any reason", () => {
 		const filter = createThreadFilter({
 			reason: new Set(["allowed", "other"]),

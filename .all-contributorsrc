@@ -36,6 +36,5 @@
   ],
   "projectName": "prune-github-notifications",
   "projectOwner": "JoshuaKGoldberg",
-  "repoType": "github",
-  "commitConvention": "angular"
+  "repoType": "github"
 }

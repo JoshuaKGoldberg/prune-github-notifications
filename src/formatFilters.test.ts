@@ -1,8 +1,8 @@
 import { describe, expect, it } from "vitest";
 
-import { formatFilters } from "./formatFilters.js";
+import { formatFilters } from "./formatFilters.ts";
 
-describe("formatFilters", () => {
+describe(formatFilters, () => {
 	it("lists reasons and title patterns on indented lines", () => {
 		const actual = formatFilters({
 			reason: new Set(["review_requested", "subscribed"]),

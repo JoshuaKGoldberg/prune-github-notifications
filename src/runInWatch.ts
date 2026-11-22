@@ -1,7 +1,7 @@
 import { styleText } from "node:util";
 
-import { formatFilters } from "./formatFilters.js";
-import { FilterOptions, PruneGitHubNotificationsResult } from "./types.js";
+import { formatFilters } from "./formatFilters.ts";
+import { FilterOptions, PruneGitHubNotificationsResult } from "./types.ts";
 
 const maxConsecutiveFailures = 3;
 

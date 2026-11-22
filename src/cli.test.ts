@@ -1,11 +1,11 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-import { pruneGitHubNotificationsCLI } from "./cli.js";
-import { defaultOptions } from "./options.js";
+import { pruneGitHubNotificationsCLI } from "./cli.ts";
+import { defaultOptions } from "./options.ts";
 
 const mockPruneGitHubNotifications = vi.fn().mockResolvedValue({ threads: [] });
 
-vi.mock("./pruneGitHubNotifications.js", () => ({
+vi.mock("./pruneGitHubNotifications.ts", () => ({
 	get pruneGitHubNotifications() {
 		return mockPruneGitHubNotifications;
 	},
@@ -15,13 +15,13 @@ const mockRunInWatch = vi.fn((action: () => void) => {
 	action();
 });
 
-vi.mock("./runInWatch.js", () => ({
+vi.mock("./runInWatch.ts", () => ({
 	get runInWatch() {
 		return mockRunInWatch;
 	},
 }));
 
-describe("pruneGitHubNotificationsCLI", () => {
+describe(pruneGitHubNotificationsCLI, () => {
 	beforeEach(() => {
 		vi.spyOn(console, "log").mockImplementation(() => undefined);
 	});
