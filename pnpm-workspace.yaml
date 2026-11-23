@@ -1,4 +1,4 @@
 allowBuilds:
   esbuild: true
 minimumReleaseAgeExclude:
-  - create-typescript-app@2.87.13
+  - create-typescript-app@2.87.15
