@@ -50,6 +50,9 @@ export default defineConfig(
 				{ allowNumber: true },
 			],
 
+			// https://github.com/eslint-community/eslint-plugin-n/issues/472
+			"n/no-unpublished-bin": "off",
+
 			// Stylistic concerns that don't interfere with Prettier
 			"logical-assignment-operators": [
 				"error",
@@ -59,9 +62,6 @@ export default defineConfig(
 			"no-useless-rename": "error",
 			"object-shorthand": "error",
 			"operator-assignment": "error",
-
-			// https://github.com/eslint-community/eslint-plugin-n/issues/472
-			"n/no-unpublished-bin": "off",
 		},
 		settings: { perfectionist: { partitionByComment: true, type: "natural" } },
 	},
@@ -76,11 +76,6 @@ export default defineConfig(
 			// https://github.com/eslint/markdown/issues/294
 			"markdown/no-missing-label-refs": "off",
 		},
-	},
-	{
-		extends: [tseslint.configs.disableTypeChecked],
-		files: ["**/*.md/*.ts"],
-		rules: { "n/no-missing-import": "off" },
 	},
 	{
 		extends: [vitest.configs.recommended],
