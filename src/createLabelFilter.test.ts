@@ -1,8 +1,8 @@
 import { describe, expect, it } from "vitest";
 
-import { createLabelFilter } from "./createLabelFilter.js";
+import { createLabelFilter } from "./createLabelFilter.ts";
 
-describe("createLabelFilter", () => {
+describe(createLabelFilter, () => {
 	it("returns undefined when no matchers are provided", () => {
 		expect(createLabelFilter(undefined)).toBeUndefined();
 	});

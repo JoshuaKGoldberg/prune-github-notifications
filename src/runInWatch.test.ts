@@ -1,7 +1,7 @@
 import { styleText } from "node:util";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-import { runInWatch } from "./runInWatch.js";
+import { runInWatch } from "./runInWatch.ts";
 
 const mockLog = vi.fn();
 const mockSetTimeout = vi.fn();
@@ -11,7 +11,7 @@ const filters = {
 	title: [/chore/],
 };
 
-describe("runInWatch", () => {
+describe(runInWatch, () => {
 	beforeEach(() => {
 		console.log = mockLog;
 		globalThis.setTimeout = mockSetTimeout as unknown as typeof setTimeout;

@@ -1,6 +1,6 @@
 # Development
 
-> If you'd like a more guided walkthrough, see [Contributing to a prune-github-notifications Repository](https://www.joshuakgoldberg.com/blog/contributing-to-a-prune-github-notifications-repository).
+> If you'd like a more guided walkthrough, see [Contributing to a create-typescript-app Repository](https://www.joshuakgoldberg.com/blog/contributing-to-a-create-typescript-app-repository).
 > It'll walk you through the common activities you'll need to contribute.
 
 After [forking the repo from GitHub](https://help.github.com/articles/fork-a-repo) and [installing pnpm](https://pnpm.io/installation):
@@ -16,13 +16,13 @@ pnpm install
 
 ## Building
 
-Run [**tsdown**](https://tsdown.dev) locally to build source files from `src/` into output files in `lib/`:
+Run [**tsdown**](https://tsdown.dev) locally to build source files from `src/` into output files in `dist/`:
 
 ```shell
 pnpm build
 ```
 
-Add `--watch` to run the builder in a watch mode that continuously cleans and recreates `lib/` as you save files:
+Add `--watch` to run the builder in a watch mode that continuously cleans and recreates `dist/` as you save files:
 
 ```shell
 pnpm build --watch
@@ -52,7 +52,7 @@ Each should be shown in VS Code, and can be run manually on the command-line:
 
 - `pnpm lint` ([ESLint](https://eslint.org) with [typescript-eslint](https://typescript-eslint.io)): Lints source files, including JavaScript, Markdown, and TypeScript
 - `pnpm lint:knip` ([knip](https://github.com/webpro/knip)): Detects unused files, dependencies, and code exports
-- `pnpm lint:packages` ([pnpm dedupe --check](https://pnpm.io/cli/dedupe)): Checks for unnecessarily duplicated packages in the `pnpm-lock.yaml` file
+- `pnpm lint:knip:production` ([knip](https://knip.dev/features/production-mode)): Detects unused files, dependencies, and code exports in production code, not counting usage from tests
 - `pnpm lint:spelling` ([cspell](https://cspell.org)): Spell checks across all source files
 
 Read the individual documentation for each linter to understand how it can be configured and used best.
@@ -103,16 +103,3 @@ Add `--watch` to keep the type checker running in a watch mode that updates the 
 ```shell
 pnpm tsc --watch
 ```
-
-## Debugging
-
-This repository includes a [VS Code launch configuration](https://code.visualstudio.com/docs/editor/debugging) for debugging.
-Depending upon the type of usage, it can include debugging for unit tests _and_ for executable (or "bin") apps.
-
-### Unit Tests
-
-To debug a unit test, open a test file, then run _Debug Current Test File_ from the VS Code Debug panel (or press F5).
-
-### `bin` Apps
-
-To debug a `bin` app, add a breakpoint to your code, then run _Debug Program_ from the VS Code Debug panel (or press F5).

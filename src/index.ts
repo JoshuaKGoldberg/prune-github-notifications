@@ -1,2 +1,2 @@
-export * from "./options.js";
-export * from "./pruneGitHubNotifications.js";
+export * from "./options.ts";
+export * from "./pruneGitHubNotifications.ts";

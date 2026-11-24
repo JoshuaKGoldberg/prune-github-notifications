@@ -1,8 +1,8 @@
 import { describe, expect, it } from "vitest";
 
-import { createAuthorFilter } from "./createAuthorFilter.js";
+import { createAuthorFilter } from "./createAuthorFilter.ts";
 
-describe("createAuthorFilter", () => {
+describe(createAuthorFilter, () => {
 	it("returns undefined when no matchers are provided", () => {
 		expect(createAuthorFilter(undefined)).toBeUndefined();
 	});

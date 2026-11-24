@@ -2,16 +2,16 @@ import debug from "debug";
 import { octokitFromAuth } from "octokit-from-auth";
 import throttledQueue from "throttled-queue";
 
-import { createAuthorFilter } from "./createAuthorFilter.js";
-import { createLabelFilter } from "./createLabelFilter.js";
-import { createThreadFilter } from "./createThreadFilter.js";
-import { getUrlDetails, UrlDetailsFilter } from "./getUrlDetails.js";
-import { defaultOptions } from "./options.js";
-import { resolveFilters } from "./resolveFilters.js";
+import { createAuthorFilter } from "./createAuthorFilter.ts";
+import { createLabelFilter } from "./createLabelFilter.ts";
+import { createThreadFilter } from "./createThreadFilter.ts";
+import { getUrlDetails, UrlDetailsFilter } from "./getUrlDetails.ts";
+import { defaultOptions } from "./options.ts";
+import { resolveFilters } from "./resolveFilters.ts";
 import {
 	PruneGitHubNotificationsOptions,
 	PruneGitHubNotificationsResult,
-} from "./types.js";
+} from "./types.ts";
 
 const log = debug("prune-github-notifications");
 

@@ -1,4 +1,4 @@
-import { UrlDetailsFilter } from "./getUrlDetails.js";
+import { UrlDetailsFilter } from "./getUrlDetails.ts";
 
 /**
  * Creates a filter for a URL's author login, if any matchers are provided.

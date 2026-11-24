@@ -1,5 +1,5 @@
-import { defaultOptions } from "./options.js";
-import { FilterOptions } from "./types.js";
+import { defaultOptions } from "./options.ts";
+import { FilterOptions } from "./types.ts";
 
 export function resolveFilters(
 	filters?: Partial<FilterOptions>,

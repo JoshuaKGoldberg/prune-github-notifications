@@ -1,4 +1,4 @@
-import { FilterOptions } from "./types.js";
+import { FilterOptions } from "./types.ts";
 
 export function formatFilters({
 	createdBy,

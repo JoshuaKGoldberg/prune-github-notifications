@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 
-import { getUrlDetails } from "./getUrlDetails.js";
+import { getUrlDetails } from "./getUrlDetails.ts";
 
 const mockRequest = vi.fn();
 
@@ -8,7 +8,7 @@ const octokit = { request: mockRequest } as unknown as Parameters<
 	typeof getUrlDetails
 >[0];
 
-describe("getUrlDetails", () => {
+describe(getUrlDetails, () => {
 	it("returns undefined without requesting when the url is null", async () => {
 		const actual = await getUrlDetails(octokit, null);
 

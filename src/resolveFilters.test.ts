@@ -1,9 +1,9 @@
 import { describe, expect, it } from "vitest";
 
-import { defaultOptions } from "./options.js";
-import { resolveFilters } from "./resolveFilters.js";
+import { defaultOptions } from "./options.ts";
+import { resolveFilters } from "./resolveFilters.ts";
 
-describe("resolveFilters", () => {
+describe(resolveFilters, () => {
 	it("uses default filters when none are provided", () => {
 		expect(resolveFilters()).toEqual(defaultOptions.filters);
 	});
