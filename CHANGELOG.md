@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.16.1](https://github.com/JoshuaKGoldberg/prune-github-notifications/compare/0.16.0...0.16.1) (2026-11-24)
+
+### Bug Fixes
+
+- bump to create-typescript-app@2.87.18 ([#842](https://github.com/JoshuaKGoldberg/prune-github-notifications/issues/842)) ([30123e2](https://github.com/JoshuaKGoldberg/prune-github-notifications/commit/30123e22cf406c41074254d0c6a0c803adecb11a)), closes [#841](https://github.com/JoshuaKGoldberg/prune-github-notifications/issues/841)
+
 ## [0.16.0](https://github.com/JoshuaKGoldberg/prune-github-notifications/compare/0.15.0...0.16.0) (2026-09-21)
 
 ### Features
